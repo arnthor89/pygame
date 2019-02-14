@@ -22,7 +22,7 @@ class SysfontModuleTest(unittest.TestCase):
 
     @unittest.skipIf('Linux' not in platform.platform(), 'Not linux we skip.')
     def test_initsysfonts_unix(self):
-        self.assertTrue(len(pygame.sysfont.get_fonts()) > 10)
+        self.assertTrue(len(pygame.sysfont.get_fonts()) > 1)
 
     def test_sysfont_notRecognized(self):
         arial = pygame.sysfont.SysFont('1234567890', 40, 1, 1)
