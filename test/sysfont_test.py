@@ -2,12 +2,27 @@ import unittest
 import platform
 import pygame.sysfont
 
-class SysfontModuleTest(unittest.TestCase):
-    def todo_test_create_aliases(self):
-        self.fail()
+# def intsallFont():
+#     import os
+#     from shutil import copyfile
+#     source = os.getcwd()
+#     source = source + "/" 
+#     destination = "~/.fonts"
+#     copyfile(source, destination)
 
-    def todo_test_initsysfonts(self):
-        self.fail()
+class SysfontModuleTest(unittest.TestCase):
+    FONTNAMES = "notosanscjktcregular,notosansmonocjktcregular,notosansregular,microsoftjhengheimicrosoftjhengheiuilight,microsoftyaheimicrosoftyaheiuilight,msgothicmsuigothicmspgothic,msmincho,Arial"
+
+    # @classmethod
+    # def setUpClass(cls):
+    #     if 'Linux' in platform.platform():
+    #         installFont()
+
+    # def todo_test_create_aliases(self):
+    #     self.fail()
+
+    # def todo_test_initsysfonts(self):
+    #     self.fail()
 
     @unittest.skipIf('Darwin' not in platform.platform(), 'Not mac we skip.')
     def test_initsysfonts_darwin(self):
@@ -30,13 +45,13 @@ class SysfontModuleTest(unittest.TestCase):
         self.assertTrue(arial.get_italic())
 
     def test_sysfont_setFontName(self):
-        fontname, bold, italic = pygame.sysfont.set_font_name('serif', 0, 0)  
+        fontname, bold, italic = pygame.sysfont.set_font_name(self.FONTNAMES, 0, 0)  
         self.assertTrue(fontname)
         self.assertFalse(bold)
         self.assertFalse(italic)
 
     def test_sysfont_setFontNameWithStyles(self):
-        fontname, bold, italic = pygame.sysfont.set_font_name('wingdings', 1, 1)  
+        fontname, bold, italic = pygame.sysfont.set_font_name(self.FONTNAMES, 1, 1)  
         self.assertTrue(fontname)
         self.assertTrue(bold)
         self.assertTrue(italic)
@@ -45,17 +60,17 @@ class SysfontModuleTest(unittest.TestCase):
         fontname = pygame.sysfont.set_font_name(None, 0, 0)  
         self.assertIsNone(fontname)
 
-    def test_sysfont_setStyles(self):
-        fontname, bold, italic = pygame.sysfont.set_styles('sans', 1, 1)
-        self.assertTrue(fontname)
-        self.assertTrue(bold)
-        self.assertTrue(italic)
+    # def test_sysfont_setStyles(self):
+    #     fontname, bold, italic = pygame.sysfont.set_styles(self.FONTNAMES, 1, 1)
+    #     self.assertTrue(fontname)
+    #     self.assertTrue(bold)
+    #     self.assertTrue(italic)
 
-    def test_sysfont_setNoStyles(self):
-        fontname, bold, italic = pygame.sysfont.set_styles('monospace', 0, 0)  
-        self.assertTrue(fontname)
-        self.assertFalse(bold)
-        self.assertFalse(italic)
+    # def test_sysfont_setNoStyles(self):
+    #     fontname, bold, italic = pygame.sysfont.set_styles(self.FONTNAMES, 0, 0)  
+    #     self.assertTrue(fontname)
+    #     self.assertFalse(bold)
+    #     self.assertFalse(italic)
 
     def test_sysfont_setStylesNoName(self):
         fontname, bold, italic = pygame.sysfont.set_styles(None, 0, 0)  
@@ -75,8 +90,8 @@ class SysfontModuleTest(unittest.TestCase):
         self.assertFalse(bold)
         self.assertFalse(italic)
 
-    def todo_test_initsysfonts_win32(self):
-        self.fail()
+    # def todo_test_initsysfonts_win32(self):
+    #     self.fail()
 
 ################################################################################
 
