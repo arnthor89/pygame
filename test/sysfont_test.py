@@ -1,22 +1,17 @@
 import unittest
 import platform
 import pygame.sysfont
-
-# def intsallFont():
-#     import os
-#     from shutil import copyfile
-#     source = os.getcwd()
-#     source = source + "/" 
-#     destination = "~/.fonts"
-#     copyfile(source, destination)
+import pygame.font
 
 class SysfontModuleTest(unittest.TestCase):
-    FONTNAMES = "notosanscjktcregular,notosansmonocjktcregular,notosansregular,microsoftjhengheimicrosoftjhengheiuilight,microsoftyaheimicrosoftyaheiuilight,msgothicmsuigothicmspgothic,msmincho,Arial"
-
-    # @classmethod
-    # def setUpClass(cls):
-    #     if 'Linux' in platform.platform():
-    #         installFont()
+    FONT = "notosanscjktcregular,notosansmonocjktcregular,notosansregular,microsoftjhengheimicrosoftjhengheiuilight,microsoftyaheimicrosoftyaheiuilight,msgothicmsuigothicmspgothic,msmincho,Arial"
+    PREFERED_FONT = 'Arial'
+    fonts = pygame.font.get_fonts()
+    if PREFERED_FONT in fonts:
+        # Try to use arial rather than random font based on installed fonts on the system.
+        FONT = PREFERED_FONT + FONT
+    else:
+        FONT = sorted(fonts)[0]
 
     # def todo_test_create_aliases(self):
     #     self.fail()
@@ -29,9 +24,8 @@ class SysfontModuleTest(unittest.TestCase):
         self.assertTrue(len(pygame.sysfont.get_fonts()) > 10)
 
     def test_sysfont_good(self):
-        import pygame.font
         pygame.font.init()
-        arial = pygame.font.SysFont('Arial', 40, 1, 0)
+        arial = pygame.font.SysFont(self.FONT, 40, 1, 0)
         self.assertTrue(arial.get_bold())
         self.assertFalse(arial.get_italic())
 
@@ -44,33 +38,23 @@ class SysfontModuleTest(unittest.TestCase):
         self.assertTrue(arial.get_bold())
         self.assertTrue(arial.get_italic())
 
+    @unittest.skipIf(not FONT, 'No font, skip')
     def test_sysfont_setFontName(self):
-        fontname, bold, italic = pygame.sysfont.set_font_name(self.FONTNAMES, 0, 0)  
+        fontname, bold, italic = pygame.sysfont.set_font_name(self.FONT, 0, 0)  
         self.assertTrue(fontname)
         self.assertFalse(bold)
         self.assertFalse(italic)
-
-    def test_sysfont_setFontNameWithStyles(self):
-        fontname, bold, italic = pygame.sysfont.set_font_name(self.FONTNAMES, 1, 1)  
-        self.assertTrue(fontname)
-        self.assertTrue(bold)
-        self.assertTrue(italic)
 
     def test_sysfont_setFontNameNoName(self):
         fontname = pygame.sysfont.set_font_name(None, 0, 0)  
         self.assertIsNone(fontname)
 
-    # def test_sysfont_setStyles(self):
-    #     fontname, bold, italic = pygame.sysfont.set_styles(self.FONTNAMES, 1, 1)
-    #     self.assertTrue(fontname)
-    #     self.assertTrue(bold)
-    #     self.assertTrue(italic)
-
-    # def test_sysfont_setNoStyles(self):
-    #     fontname, bold, italic = pygame.sysfont.set_styles(self.FONTNAMES, 0, 0)  
-    #     self.assertTrue(fontname)
-    #     self.assertFalse(bold)
-    #     self.assertFalse(italic)
+    @unittest.skipIf(not FONT, 'No font, skip')
+    def test_sysfont_setNoStyles(self):
+        fontname, bold, italic = pygame.sysfont.set_styles(self.FONT, 0, 0)  
+        self.assertTrue(fontname)
+        self.assertFalse(bold)
+        self.assertFalse(italic)
 
     def test_sysfont_setStylesNoName(self):
         fontname, bold, italic = pygame.sysfont.set_styles(None, 0, 0)  
@@ -81,12 +65,6 @@ class SysfontModuleTest(unittest.TestCase):
     def test_sysfont_setInvalidFont(self):
         fontname, bold, italic = pygame.sysfont.set_styles('1234567890', 0, 0)  
         self.assertIsNone(fontname)
-        self.assertFalse(bold)
-        self.assertFalse(italic)
-    
-    def test_sysfont_setStylesNotFoundValidFont(self):
-        fontname, bold, italic = pygame.sysfont.set_styles('notosanstaile', 1, 1)
-        self.assertTrue(fontname)
         self.assertFalse(bold)
         self.assertFalse(italic)
 
