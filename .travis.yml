@@ -41,7 +41,7 @@ before_install:
       sudo apt-get install python-dev libsdl-image1.2-dev libsdl-mixer1.2-dev \
         libsdl-ttf2.0-dev libsdl1.2-dev python-numpy libportmidi-dev libjpeg-dev \
         libtiff5-dev libx11-6 libx11-dev xfonts-base xfonts-100dpi xfonts-75dpi \
-        xfonts-cyrillic fluid-soundfont-gm musescore-soundfont-gm ttf-mscorefonts-installer
+        xfonts-cyrillic fluid-soundfont-gm musescore-soundfont-gm
     fi
 install:
   - $(set | grep PYPI_ | python -c "import sys;print('\n'.join(['unset %s' % l.split('=')[0] for l in sys.stdin.readlines() if l.startswith('PYPI')]))")
