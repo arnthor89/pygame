@@ -30,13 +30,13 @@ class SysfontModuleTest(unittest.TestCase):
         self.assertTrue(arial.get_italic())
 
     def test_sysfont_setFontName(self):
-        fontname, bold, italic = pygame.sysfont.set_font_name('monospace', 0, 0)  
+        fontname, bold, italic = pygame.sysfont.set_font_name('serif', 0, 0)  
         self.assertTrue(fontname)
         self.assertFalse(bold)
         self.assertFalse(italic)
 
     def test_sysfont_setFontNameWithStyles(self):
-        fontname, bold, italic = pygame.sysfont.set_font_name('monospace', 1, 1)  
+        fontname, bold, italic = pygame.sysfont.set_font_name('wingdings', 1, 1)  
         self.assertTrue(fontname)
         self.assertTrue(bold)
         self.assertTrue(italic)
@@ -46,7 +46,7 @@ class SysfontModuleTest(unittest.TestCase):
         self.assertIsNone(fontname)
 
     def test_sysfont_setStyles(self):
-        fontname, bold, italic = pygame.sysfont.set_styles('monospace', 1, 1)
+        fontname, bold, italic = pygame.sysfont.set_styles('sans', 1, 1)
         self.assertTrue(fontname)
         self.assertTrue(bold)
         self.assertTrue(italic)
