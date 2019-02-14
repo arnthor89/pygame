@@ -87,6 +87,7 @@ def initsysfonts_win32():
         key_name = "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts"
     key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, key_name)
 
+    # Could be split up
     for i in xrange_(_winreg.QueryInfoKey(key)[1]):
         try:
             # name is the font's name e.g. Times New Roman (TrueType)
@@ -323,35 +324,8 @@ def SysFont(name, size, bold=False, italic=False, constructor=None):
 
     gotbold = gotitalic = False
     fontname = None
-    if name:
-        allnames = name
-        for name in allnames.split(','):
-            name = _simplename(name)
-            styles = Sysfonts.get(name)
-            if not styles:
-                styles = Sysalias.get(name)
-            if styles:
-                plainname = styles.get((False, False))
-                fontname = styles.get((bold, italic))
-                if not fontname and not plainname:
-                    # Neither requested style, nor plain font exists, so
-                    # return a font with the name requested, but an
-                    # arbitrary style.
-                    (style, fontname) = list(styles.items())[0]
-                    # Attempt to style it as requested. This can't
-                    # unbold or unitalicize anything, but it can
-                    # fake bold and/or fake italicize.
-                    if bold and style[0]:
-                        gotbold = True
-                    if italic and style[1]:
-                        gotitalic = True
-                elif not fontname:
-                    fontname = plainname
-                elif plainname != fontname:
-                    gotbold = bold
-                    gotitalic = italic
-            if fontname:
-                break
+
+    fontname, gotbold, gotitalic = set_font_name(name, bold, italic)
 
     set_bold = set_italic = False
     if bold and not gotbold:
@@ -361,6 +335,57 @@ def SysFont(name, size, bold=False, italic=False, constructor=None):
 
     return constructor(fontname, size, set_bold, set_italic)
 
+def set_font_name(name, bold=False, italic=False):
+    """set_font_name(name, bold=False, italic=False) -> fontname, bold, italic
+    """
+    if not name:
+        return None
+
+    gotbold = gotitalic = False
+    fontname = None
+
+    allnames = name
+    for name in allnames.split(','):
+        name = _simplename(name)
+
+        fontname, gotbold, gotitalic = set_styles(name, bold, italic)
+        if fontname:
+            break
+
+    return fontname, gotbold, gotitalic
+
+def set_styles(name, bold=False, italic=False):
+    styles = Sysfonts.get(name)
+    if not styles:
+        styles = Sysalias.get(name)
+
+    gotbold = gotitalic = False
+    fontname = None
+
+    if not styles:
+        return fontname, gotbold, gotitalic
+        
+    plainname = styles.get((False, False))
+    fontname = styles.get((bold, italic))
+    if not fontname and not plainname:
+        # Neither requested style, nor plain font exists, so
+        # return a font with the name requested, but an
+        # arbitrary style.
+        (style, fontname) = list(styles.items())[0]
+        # Attempt to style it as requested. This can't
+        # unbold or unitalicize anything, but it can
+        # fake bold and/or fake italicize.
+        if bold and style[0]:
+            gotbold = True
+        if italic and style[1]:
+            gotitalic = True
+    elif not fontname:
+        fontname = plainname
+    elif plainname != fontname:
+        gotbold = bold
+        gotitalic = italic
+
+    return fontname, gotbold, gotitalic
 
 def get_fonts():
     """pygame.font.get_fonts() -> list
