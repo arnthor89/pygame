@@ -980,6 +980,13 @@ class LayeredDirtyTypeTest__DirtySprite(LayeredGroupBase, unittest.TestCase):
 
         group.repaint_rect(pygame.Rect(0, 0, 100, 100))
         group.draw(surface)
+    
+    def test_draw_with_bgd(self):
+        group = self.LG
+        surface = pygame.Surface((100, 100))
+        bg = pygame.image.load("examples/data/background.gif")
+        group.draw(surface, bg)
+
 
     def test_repaint_rect_with_clip(self):
         group = self.LG
