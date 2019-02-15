@@ -4,8 +4,8 @@ import pygame
 
 
 class CursorsModuleTest():
-    def todo_test_compile(self):
-
+    def test_compile(self,branchArray):
+        pass
         # __doc__ (as of 2008-06-25) for pygame.cursors.compile:
 
           # pygame.cursors.compile(strings, black, white,xor) -> data, mask
@@ -24,7 +24,6 @@ class CursorsModuleTest():
           # data. Both these arguments are used when setting a cursor with
           # pygame.mouse.set_cursor().
 
-        self.fail()
 
     def test_load_xbm(self,branchArray):
         # __doc__ (as of 2008-06-25) for pygame.cursors.load_xbm:

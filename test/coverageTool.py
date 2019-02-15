@@ -4,13 +4,16 @@ import cursors_test
 class coverageTool():
     def __init__(self):
         self.load_xbm = [False] * 28
+        self.compile = [False] * 10
 
     def run(self):
         ct = cursors_test.CursorsModuleTest()
         ct.test_load_xbm(self.load_xbm)
+        ct.test_compile(self.compile)
 
     def report(self):
-        self.present("load xbm",self.load_xbm)
+        self.present("pygame.cursors.load_xbm",self.load_xbm)
+        self.present("pygame.cursors.compile",self.compile)
 
     def present(self, name ,result):
         print("-"*10 + name + "-"*10)
