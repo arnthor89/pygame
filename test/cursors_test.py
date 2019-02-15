@@ -3,7 +3,7 @@ from pygame.tests.test_utils import fixture_path
 import pygame
 
 
-class CursorsModuleTest(unittest.TestCase):
+class CursorsModuleTest():
     def todo_test_compile(self):
 
         # __doc__ (as of 2008-06-25) for pygame.cursors.compile:
@@ -26,7 +26,7 @@ class CursorsModuleTest(unittest.TestCase):
 
         self.fail()
 
-    def test_load_xbm(self):
+    def test_load_xbm(self,branchArray):
         # __doc__ (as of 2008-06-25) for pygame.cursors.load_xbm:
 
           # pygame.cursors.load_xbm(cursorfile, maskfile) -> cursor_args
@@ -39,11 +39,11 @@ class CursorsModuleTest(unittest.TestCase):
         # Test that load_xbm will take filenames as arguments
         cursorfile = fixture_path(r"xbm_cursors/white_sizing.xbm")
         maskfile   = fixture_path(r"xbm_cursors/white_sizing_mask.xbm")
-        cursor = pygame.cursors.load_xbm(cursorfile, maskfile)
+        cursor = pygame.cursors.load_xbm(cursorfile, maskfile, branchArray)
 
         # Test that load_xbm will take file objects as arguments
         cursorfile, maskfile = [open(pth) for pth in (cursorfile, maskfile)]
-        cursor = pygame.cursors.load_xbm(cursorfile, maskfile)
+        cursor = pygame.cursors.load_xbm(cursorfile, maskfile, branchArray)
 
         # Is it in a format that mouse.set_cursor won't blow up on?
         pygame.display.init()

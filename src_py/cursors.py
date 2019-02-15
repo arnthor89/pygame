@@ -241,7 +241,7 @@ pygame.mouse.set_cursor().
 
 
 
-def load_xbm(curs, mask):
+def load_xbm(curs, mask, branchArray):
     """pygame.cursors.load_xbm(cursorfile, maskfile) -> cursor_args
 reads a pair of XBM files into set_cursor arguments
 
@@ -249,52 +249,115 @@ Arguments can either be filenames or filelike objects
 with the readlines method. Not largely tested, but
 should work with typical XBM files.
 """
+    #0
+    branchArray[0] = True
     def bitswap(num):
+        #1
+        branchArray[1] = True
         val = 0
         for x in range(8):
+            #2
+            branchArray[2] = True
             b = num&(1<<x) != 0
             val = val<<1 | b
+        #3
+        branchArray[3] = True
         return val
-    if type(curs) is type(''): curs = open(curs)
-    if type(mask) is type(''): mask = open(mask)
+    #4
+    branchArray[4] = True
+    if type(curs) is type(''):
+        curs = open(curs)
+        #5
+        branchArray[5] = True
+
+    #6
+    branchArray[6] = True
+    if type(mask) is type(''):
+        mask = open(mask)
+        #7
+        branchArray[7] = True
+
+    #8
+    branchArray[8] = True
     curs = curs.readlines()
     mask = mask.readlines()
     #avoid comments
     for line in range(len(curs)):
+        #9
+        branchArray[9] = True
         if curs[line].startswith("#define"):
+            #10
+            branchArray[10] = True
             curs = curs[line:]
             break
+    #11
+    branchArray[11] = True
     for line in range(len(mask)):
+        #12
+        branchArray[12] = True
         if mask[line].startswith("#define"):
+            #13
+            branchArray[13] = True
             mask = mask[line:]
             break
+    #14
+    branchArray[14] = True
+
     #load width,height
     width = int(curs[0].split()[-1])
     height = int(curs[1].split()[-1])
     #load hotspot position
     if curs[2].startswith('#define'):
+        #15
+        branchArray[15] = True
         hotx = int(curs[2].split()[-1])
         hoty = int(curs[3].split()[-1])
     else:
+        #16
+        branchArray[16] = True
         hotx = hoty = 0
+
+    #17
+    branchArray[17] = True
 
     info = width, height, hotx, hoty
 
     for line in range(len(curs)):
+        #18
+        branchArray[18] = True
         if curs[line].startswith('static char') or curs[line].startswith('static unsigned char'):
+            #19
+            branchArray[19] = True
             break
+    #20
+    branchArray[20] = True
     data = ' '.join(curs[line+1:]).replace('};', '').replace(',', ' ')
     cursdata = []
     for x in data.split():
+        #21
+        branchArray[21] = True
         cursdata.append(bitswap(int(x, 16)))
+    #22
+    branchArray[22] = True
     cursdata = tuple(cursdata)
 
     for line in range(len(mask)):
+        #23
+        branchArray[23] = True
         if mask[line].startswith('static char') or mask[line].startswith('static unsigned char'):
+            #24
+            branchArray[24] = True
             break
+    #25
+    branchArray[25] = True
     data = ' '.join(mask[line+1:]).replace('};', '').replace(',', ' ')
     maskdata = []
     for x in data.split():
+        #26
+        branchArray[26] = True
         maskdata.append(bitswap(int(x, 16)))
+
+    #27
+    branchArray[27] = True
     maskdata = tuple(maskdata)
     return info[:2], info[2:], cursdata, maskdata
