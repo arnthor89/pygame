@@ -2,6 +2,8 @@ import unittest
 import cursors_test
 import draw_test
 
+# Coverage tool for measuring how much of a function is covered by tests
+# Note: Is currently only supported by pytohn 3.x not python 2.x
 class coverageTool():
     def __init__(self):
         self.load_xbm = [False] * 28
@@ -32,7 +34,9 @@ class coverageTool():
         print("-"*10 + name + "-"*10)
         for i in range(0,len(result)):
             print(str(i) + ": " + str(result[i]))
+        print("Coverage = " + str(100*float(sum(result))/len(result))+ "%")
         print("-"*(20+len(name))+"\n")
+
 
 if __name__=="__main__":
     ct = coverageTool()
