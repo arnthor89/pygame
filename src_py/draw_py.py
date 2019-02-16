@@ -183,7 +183,7 @@ def clip_line(line, left, top, right, bottom, use_float=False):
             y1 = top
 
 
-def _draw_line(surf, color, x1, y1, x2, y2):
+def _draw_line(surf, color, x1, y1, x2, y2, brachArray):
     '''draw a non-horizontal line (without anti-aliasing).'''
     # Variant of https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
     #
@@ -191,46 +191,84 @@ def _draw_line(surf, color, x1, y1, x2, y2):
     # "slope" variable (instead of delta_x and delta_y) and a "error" variable.
     # And we can not do pointer-arithmetic with "BytesPerPixel", like in
     # the C-algorithm.
+    #0
+    brachArray[0] = True
     if x1 == x2:
+        #1
+        brachArray[1] = True
         # This case should not happen...
         raise ValueError
-
+    #2
+    brachArray[2] = True
     slope = abs((y2 - y1) / (x2 - x1))
     error = 0.0
-
     if slope < 1:
+        #3
+        brachArray[3] = True
         # Here, it's a rather horizontal line
-
         # 1. check in which octants we are & set init values
         if x2 < x1:
+            #4
+            brachArray[4] = True
             x1, x2 = x2, x1
             y1, y2 = y2, y1
+        #5
+        brachArray[5] = True
         y = y1
-        dy_sign = 1 if (y1 < y2) else -1
-
+        #dy_sign = 1 if (y1 < y2) else -1
+        if (y1 < y2):
+            #6
+            brachArray[6] = True
+            dy_sign = 1
+        else:
+            #7
+            brachArray[7] = True
+            dy_sign = -1
         # 2. step along x coordinate
         for x in range(x1, x2 + 1):
+            #8
+            brachArray[8] = True
             set_at(surf, x, y, color)
             error += slope
             if error >= 0.5:
+                #9
+                brachArray[9] = True
                 y += dy_sign
                 error -= 1
     else:
+        #10
+        brachArray[10] = True
         # Case of a rather vertical line
-
         # 1. check in which octants we are & set init values
         if y1 > y2:
+            #11
+            brachArray[11] = True
             x1, x2 = x2, x1
             y1, y2 = y2, y1
+        #12
+        brachArray[12] = True
         x = x1
         slope = 1 / slope
-        dx_sign = 1 if (x1 < x2) else -1
-
+        #dx_sign = 1 if (x1 < x2) else -1
+        if (x1 < x2):
+            #13
+            brachArray[13] = True
+            dx_sign = 1
+        else:
+            #14
+            brachArray[14] = True
+            dx_sign = -1
+        #15
+        brachArray[15] = True
         # 2. step along y coordinate
         for y in range(y1, y2 + 1):
+            #16
+            brachArray[16] = True
             set_at(surf, x, y, color)
             error += slope
             if error >= 0.5:
+                #17
+                brachArray[17] = True
                 x += dx_sign
                 error -= 1
 
@@ -346,7 +384,7 @@ def _draw_aaline(surf, color, from_x, from_y, to_x, to_y, blend):
 
 #   C L I P   A N D   D R A W   L I N E   F U N C T I O N S    #
 
-def _clip_and_draw_line(surf, rect, color, pts):
+def _clip_and_draw_line(surf, rect, color, pts, branchArray):
     '''clip the line into the rectangle and draw if needed.
 
     Returns true if anything has been drawn, else false.'''
@@ -362,17 +400,17 @@ def _clip_and_draw_line(surf, rect, color, pts):
     elif pts[0] == pts[2]: #  eg x1 == x2
         _drawvertline(surf, color, pts[0], pts[1], pts[3])
     else:
-        _draw_line(surf, color, pts[0], pts[1], pts[2], pts[3])
+        _draw_line(surf, color, pts[0], pts[1], pts[2], pts[3], branchArray)
     return 1
 
-def _clip_and_draw_line_width(surf, rect, color, line, width):
+def _clip_and_draw_line_width(surf, rect, color, line, width, branchArray):
     yinc = xinc = 0
     if abs(line[0] - line[2]) > abs(line[1] - line[3]):
         yinc = 1
     else:
         xinc = 1
     newpts = line[:]
-    if _clip_and_draw_line(surf, rect, color, newpts):
+    if _clip_and_draw_line(surf, rect, color, newpts, branchArray):
         anydrawn = 1
         frame = newpts[:]
     else:
@@ -384,7 +422,7 @@ def _clip_and_draw_line_width(surf, rect, color, line, width):
         newpts[1] = line[1] + yinc * loop
         newpts[2] = line[2] + xinc * loop
         newpts[3] = line[3] + yinc * loop
-        if _clip_and_draw_line(surf, rect, color, newpts):
+        if _clip_and_draw_line(surf, rect, color, newpts, branchArray):
             anydrawn = 1
             frame[0] = min(newpts[0], frame[0])
             frame[1] = min(newpts[1], frame[1])
@@ -396,7 +434,7 @@ def _clip_and_draw_line_width(surf, rect, color, line, width):
             newpts[1] = line[1] - yinc * loop
             newpts[2] = line[2] - xinc * loop
             newpts[3] = line[3] - yinc * loop
-            if _clip_and_draw_line(surf, rect, color, newpts):
+            if _clip_and_draw_line(surf, rect, color, newpts, branchArray):
                 anydrawn = 1
                 frame[0] = min(newpts[0], frame[0])
                 frame[1] = min(newpts[1], frame[1])
@@ -423,15 +461,15 @@ def draw_aaline(surf, color, from_point, to_point, blend=True):
     return _clip_and_draw_aaline(surf, surf.get_clip(), color, line, blend)
 
 
-def draw_line(surf, color, from_point, to_point, width=1):
+def draw_line(surf, color, from_point, to_point, branchArray, width=1):
     '''draw anti-aliased line between two endpoints.'''
     line = [from_point[0], from_point[1], to_point[0], to_point[1]]
-    return _clip_and_draw_line_width(surf, surf.get_clip(), color, line, width)
+    return _clip_and_draw_line_width(surf, surf.get_clip(), color, line, width, branchArray)
 
 
 #   M U L T I L I N E   F U N C T I O N S   #
 
-def _multi_lines(surf, color, closed, points, width=1, blend=False, aaline=False):
+def _multi_lines(surf, color, closed, points, branchArray, width=1, blend=False, aaline=False):
     '''draw several lines, either anti-aliased or not.'''
     # The code for anti-aliased or not is almost identical, so it's factorized
     length = len(points)
@@ -460,7 +498,7 @@ def _multi_lines(surf, color, closed, points, width=1, blend=False, aaline=False
         if aaline:
             _clip_and_draw_aaline(surf, rect, color, line, blend)
         else:
-            _clip_and_draw_line_width(surf, rect, color, line, width)
+            _clip_and_draw_line_width(surf, rect, color, line, width, branchArray)
 
     if closed:
         line[0] = xlist[length - 1]
@@ -470,23 +508,23 @@ def _multi_lines(surf, color, closed, points, width=1, blend=False, aaline=False
         if aaline:
             _clip_and_draw_aaline(surf, rect, color, line, blend)
         else:
-            _clip_and_draw_line_width(surf, rect, color, line, width)
+            _clip_and_draw_line_width(surf, rect, color, line, width, branchArray)
 
     return  # TODO Rect(...)
 
-def draw_lines(surf, color, closed, points, width=1):
+def draw_lines(surf, color, closed, points, branchArray, width=1):
     '''draw several lines connected through the points.'''
-    return _multi_lines(surf, color, closed, points, width, aaline=False)
+    return _multi_lines(surf, color, closed, points, branchArray, width, aaline=False)
 
 
-def draw_aalines(surf, color, closed, points, blend=True):
+def draw_aalines(surf, color, closed, points, branchArray, blend=True):
     '''draw several anti-aliased lines connected through the points.'''
-    return _multi_lines(surf, color, closed, points, blend=blend, aaline=True)
+    return _multi_lines(surf, color, closed, points, branchArray, blend=blend, aaline=True)
 
 
-def draw_polygon(surface, color, points, width):
+def draw_polygon(surface, color, points, width, branchArray):
     if width:
-        draw_lines(surface, color, 1, points, width)
+        draw_lines(surface, color, 1, points, branchArray, width)
         return  # TODO Rect(...)
     num_points = len(points)
     point_x = [x for x, y in points]

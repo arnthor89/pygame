@@ -106,37 +106,37 @@ def lines_set_up():
 class LineMixin:
     """Mixin for testing line(), aaline(), lines() and aalines()."""
 
-    def test_line_color(self):
+    def test_line_color(self, branchArray):
         """Checks if the line drawn with line_is_color() is the correct color.
         """
 
-        def line_is_color(surface, color, draw_line):
+        def line_is_color(surface, color, draw_line, branchArray):
             """
             Returns True if draw_line is drawn with the correct color on the
             given surface.
             """
-            draw_line(surface, color, (0, 0), (1, 0))
+            draw_line(surface, color, (0, 0), (1, 0), branchArray)
             return surface.get_at((0, 0)) == color
 
         for draw_line in self.single_line:
             colors, surfaces = lines_set_up()
             for surface in surfaces:
                 for color in colors:
-                    self.assertTrue(line_is_color(surface, color, draw_line))
+                    self.assertTrue(line_is_color(surface, color, draw_line, branchArray))
 
-    def test_line_gaps(self):
+    def test_line_gaps(self, branchArray):
         """Tests if the line drawn with line_has_gaps() contains any gaps.
 
         See: #512
         """
 
-        def line_has_gaps(surface, draw_line):
+        def line_has_gaps(surface, draw_line, branchArray):
             """Returns True if the line drawn on the surface contains gaps.
             """
             width = surface.get_width()
             color = (255, 255, 255)
 
-            draw_line(surface, color, (0, 0), (width - 1, 0))
+            draw_line(surface, color, (0, 0), (width - 1, 0), branchArray)
 
             colors = [surface.get_at((x, 0)) for x in range(width)]
 
@@ -145,12 +145,12 @@ class LineMixin:
         for draw_line in self.single_line:
             _, surfaces = lines_set_up()
             for surface in surfaces:
-                self.assertTrue(line_has_gaps(surface, draw_line))
+                self.assertTrue(line_has_gaps(surface, draw_line, branchArray))
 
-    def test_lines_color(self):
+    def test_lines_color(self, branchArray):
         """Tests if the lines drawn with lines_are_color() are the correct color.
         """
-        def lines_are_color(surface, color, draw_lines):
+        def lines_are_color(surface, color, draw_lines, branchArray):
             """Draws (aa)lines around the border of the given surface and
             checks if all borders of the surface only contain the given color.
             """
@@ -159,7 +159,7 @@ class LineMixin:
             points = [(0, 0), (width - 1, 0), (width - 1, height - 1),
                       (0, height - 1)]
 
-            draw_lines(surface, color, True, points)
+            draw_lines(surface, color, True, points, branchArray)
 
             borders = get_border_values(surface, width, height)
             return [all(c == color for c in border) for border in borders]
@@ -168,16 +168,16 @@ class LineMixin:
             colors, surfaces = lines_set_up()
             for surface in surfaces:
                 for color in colors:
-                    in_border = lines_are_color(surface, color, draw_lines)
+                    in_border = lines_are_color(surface, color, draw_lines, branchArray)
                     self.assertTrue(all(in_border))
 
-    def test_lines_gaps(self):
+    def test_lines_gaps(self, branchArray):
         """Tests if the lines drawn with lines_have_gaps() contain any gaps.
 
         See: #512
         """
 
-        def lines_have_gaps(surface, draw_lines):
+        def lines_have_gaps(surface, draw_lines, branchArray):
             """Draws (aa)lines around the border of the given surface and
             checks if all borders of the surface contain any gaps.
             """
@@ -187,7 +187,7 @@ class LineMixin:
             points = [(0, 0), (width - 1, 0), (width - 1, height - 1),
                       (0, height - 1)]
 
-            draw_lines(surface, color, True, points)
+            draw_lines(surface, color, True, points, branchArray)
 
             borders = get_border_values(surface, width, height)
             return [all(c == color for c in border) for border in borders]
@@ -195,7 +195,7 @@ class LineMixin:
         for draw_lines in self.multi_line:
             _, surfaces = lines_set_up()
             for surface in surfaces:
-                no_gaps = lines_have_gaps(surface, draw_lines)
+                no_gaps = lines_have_gaps(surface, draw_lines, branchArray)
                 self.assertTrue(all(no_gaps))
 
 
@@ -204,7 +204,6 @@ class PythonDrawLineTest(LineMixin, unittest.TestCase):
 
     single_line = [draw_py.draw_aaline, draw_py.draw_line]
     multi_line = [draw_py.draw_aalines, draw_py.draw_lines]
-
 
 class DrawLineTest(LineMixin, unittest.TestCase):
     '''Test draw functions "aaline", "line", "aalines" and "lines".'''
