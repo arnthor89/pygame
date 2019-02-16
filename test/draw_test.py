@@ -817,6 +817,11 @@ class PythonDrawPolygonTest(DrawPolygonMixin, unittest.TestCase):
     def draw_polygon(self, color, path, width):
         draw_py.draw_polygon(self.surface, color, path, width)
 
+class ClipLineTest(unittest.TestCase):
+
+    def test_clip_line2(self):
+        pts = [0,3,3,5]
+        self.assertTrue(draw_py.clip_line(pts, 1, 1, 5, 5))
 
 ################################################################################
 
