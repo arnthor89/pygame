@@ -12,6 +12,7 @@ class coverageTool():
         self.branchArray['load_xbm'] = [False] * 28
         self.branchArray['compile'] = [False] * 10
         self.branchArray['_draw_line'] = [False] * 18
+        self.branchArray['clip_line'] = [False] * 23
 
     def run(self):
         # Test for load_xbm
@@ -29,6 +30,12 @@ class coverageTool():
         ct.test_lines_color(self.branchArray['_draw_line'])
         ct.test_lines_gaps(self.branchArray['_draw_line'])
 
+        # Test for clip_line funtion
+        ct = draw_test.PythonDrawLineTest()
+        ct.test_line_color(self.branchArray['clip_line'])
+        ct.test_line_gaps(self.branchArray['clip_line'])
+        ct.test_lines_color(self.branchArray['clip_line'])
+        ct.test_lines_gaps(self.branchArray['clip_line'])
 
         self.totCount = 0
         self.TrueCount = 0
@@ -41,6 +48,7 @@ class coverageTool():
         self.present("pygame.cursors.load_xbm", self.branchArray['load_xbm'])
         self.present("pygame.cursors.compile", self.branchArray['compile'])
         self.present("pygame.draw_py._draw_line", self.branchArray['_draw_line'])
+        self.present("pygame.draw_py.clip_line", self.branchArray['clip_line'])
 
         if self.totCount != 0:
             print("Total coverage: " + str(100*self.TrueCount/self.totCount) + "%")
