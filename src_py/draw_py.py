@@ -129,7 +129,7 @@ ACCEPT = lambda a, b: not (a or b)
 REJECT = lambda a, b: a and b
 
 
-def clip_line(line, left, top, right, bottom, use_float=False):
+def clip_line(line, left, top, right, bottom, branchArray, use_float=False):
     '''Algorithm to calculate the clipped line.
 
     We calculate the coordinates of the part of the line segment within the
@@ -139,48 +139,74 @@ def clip_line(line, left, top, right, bottom, use_float=False):
 
     Returns: true if the line segment cuts the bounding box (false otherwise)
     '''
+    branchArray[0] = True
     assert isinstance(line, list)
     x1, y1, x2, y2 = line
-    dtype = float if use_float else int
-
+    if use_float:
+        branchArray[1] = True
+        dtype = float
+    else:
+        branchArray[2] = True    
+        dtype = int
+    
+    branchArray[3] = True
     while True:
+        branchArray[4] = True
         # the coordinates are progressively modified with the codes,
         # until they are either rejected or correspond to the final result.
         code1 = encode(x1, y1, left, top, right, bottom)
         code2 = encode(x2, y2, left, top, right, bottom)
 
         if ACCEPT(code1, code2):
+            branchArray[5] = True
             # write coordinates into "line" !
             line[:] = x1, y1, x2, y2
             return True
+        branchArray[6] = True
         if REJECT(code1, code2):
+            branchArray[7] = True
             return False
+        branchArray[8] = True
 
         # We operate on the (x1, y1) point, and swap if it is inside the bbox:
         if INSIDE(code1):
+            branchArray[9] = True
             x1, x2 = x2, x1
             y1, y2 = y2, y1
             code1, code2 = code2, code1
+        branchArray[10] = True
         if (x2 != x1):
+            branchArray[11] = True
             m = (y2 - y1) / float(x2 - x1)
         else:
+            branchArray[12] = True
             m = 1.0
+        branchArray[13] = True
         # Each case, if true, means that we are outside the border:
         # calculate x1 and y1 to be the "first point" inside the bbox...
         if code1 & LEFT_EDGE:
+            branchArray[14] = True
             y1 += dtype((left - x1) * m)
             x1 = left
         elif code1 & RIGHT_EDGE:
+            branchArray[15] = True
             y1 += dtype((right - x1) * m)
             x1 = right
         elif code1 & BOTTOM_EDGE:
+            branchArray[16] = True
             if x2 != x1:
+                branchArray[17] = True
                 x1 += dtype((bottom - y1) / m)
+            branchArray[18] = True
             y1 = bottom
         elif code1 & TOP_EDGE:
+            branchArray[19] = True
             if x2 != x1:
+                branchArray[20] = True
                 x1 += dtype((top - y1) / m)
+            branchArray[21] = True
             y1 = top
+        branchArray[22] = True
 
 
 def _draw_line(surf, color, x1, y1, x2, y2, brachArray):
@@ -392,7 +418,7 @@ def _clip_and_draw_line(surf, rect, color, pts, branchArray):
     # of the line to be drawn : pts = x1, y1, x2, y2.
     # The data format is like that to stay closer to the C-algorithm.
     if not clip_line(pts, rect.x, rect.y, rect.x + rect.w - 1,
-                    rect.y + rect.h - 1):
+                    rect.y + rect.h - 1, branchArray):
         # The line segment defined by "pts" is not crossing the rectangle
         return 0
     if pts[1] == pts[3]:  #  eg y1 == y2
@@ -444,10 +470,10 @@ def _clip_and_draw_line_width(surf, rect, color, line, width, branchArray):
     return anydrawn
 
 
-def _clip_and_draw_aaline(surf, rect, color, line, blend):
+def _clip_and_draw_aaline(surf, rect, color, line, blend, branchArray):
     '''draw anti-aliased line between two endpoints.'''
     if not clip_line(line, rect.x - 1, rect.y -1, rect.x + rect.w,
-                     rect.y + rect.h, use_float=True):
+                     rect.y + rect.h, branchArray, use_float=True):
         return # TODO Rect(rect.x, rect.y, 0, 0)
     _draw_aaline(surf, color, line[0], line[1], line[2], line[3], blend)
     return # TODO Rect(-- affected area --)
@@ -455,10 +481,10 @@ def _clip_and_draw_aaline(surf, rect, color, line, blend):
 
 #    D R A W   L I N E   F U N C T I O N S    #
 
-def draw_aaline(surf, color, from_point, to_point, blend=True):
+def draw_aaline(surf, color, from_point, to_point, branchArray, blend=True):
     '''draw anti-aliased line between two endpoints.'''
     line = [from_point[0], from_point[1], to_point[0], to_point[1]]
-    return _clip_and_draw_aaline(surf, surf.get_clip(), color, line, blend)
+    return _clip_and_draw_aaline(surf, surf.get_clip(), color, line, blend, branchArray)
 
 
 def draw_line(surf, color, from_point, to_point, branchArray, width=1):
@@ -496,7 +522,7 @@ def _multi_lines(surf, color, closed, points, branchArray, width=1, blend=False,
         line[2] = xlist[loop]
         line[3] = ylist[loop]
         if aaline:
-            _clip_and_draw_aaline(surf, rect, color, line, blend)
+            _clip_and_draw_aaline(surf, rect, color, line, blend, branchArray)
         else:
             _clip_and_draw_line_width(surf, rect, color, line, width, branchArray)
 
@@ -506,7 +532,7 @@ def _multi_lines(surf, color, closed, points, branchArray, width=1, blend=False,
         line[2] = xlist[0]
         line[3] = ylist[0]
         if aaline:
-            _clip_and_draw_aaline(surf, rect, color, line, blend)
+            _clip_and_draw_aaline(surf, rect, color, line, blend, branchArray)
         else:
             _clip_and_draw_line_width(surf, rect, color, line, width, branchArray)
 
