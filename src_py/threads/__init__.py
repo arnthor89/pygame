@@ -235,7 +235,7 @@ class FuncResult:
                 self.errback(self.exception)
 
 
-def tmap(f, seq_args, num_workers = 20, worker_queue = None, wait = True, stop_on_error = True):
+def tmap(f, seq_args, branchArray, num_workers = 20, worker_queue = None, wait = True, stop_on_error = True):
     """ like map, but uses a thread pool to execute.
         num_workers - the number of worker threads that will be used.  If pool
                         is passed in, then the num_workers arg is ignored.
@@ -245,24 +245,31 @@ def tmap(f, seq_args, num_workers = 20, worker_queue = None, wait = True, stop_o
                results, is returned as a list of FuncResult instances.
         stop_on_error - 
     """
-
+    branchArray[0] = True
     if worker_queue:
+        branchArray[1] = True
         wq = worker_queue
     else:
+        branchArray[2] = True
         # see if we have a global queue to work with.
         if _wq:
+            branchArray[3] = True
             wq = _wq
         else:
+            branchArray[4] = True
             if num_workers == 0:
+                branchArray[5] = True
                 return map(f, seq_args)
-
+            branchArray[6] = True
             wq = WorkerQueue(num_workers)
-
+        branchArray[7] = True
+    branchArray[8] = True
     # we short cut it here if the number of workers is 0.
     # normal map should be faster in this case.
     if len(wq.pool) == 0:
+        branchArray[9] = True
         return map(f, seq_args)
-
+    branchArray[10] = True
     #print ("queue size:%s" % wq.queue.qsize())
 
 
@@ -274,37 +281,51 @@ def tmap(f, seq_args, num_workers = 20, worker_queue = None, wait = True, stop_o
 
     results = []
     for sa in seq_args:
+        branchArray[11] = True
         results.append(FuncResult(f))
         wq.do(results[-1], sa)
-
+    branchArray[12] = True
 
     #wq.stop()
 
     if wait:
+        branchArray[13] = True
         #print ("wait")
         wq.wait()
         #print ("after wait")
         #print ("queue size:%s" % wq.queue.qsize())
         if wq.queue.qsize():
+            branchArray[14] = True
             raise Exception("buggy threadmap")
         # if we created a worker queue, we need to stop it.
+        branchArray[15] = True
         if not worker_queue and not _wq:
+            branchArray[16] = True
             #print ("stoping")
             wq.stop()
             if wq.queue.qsize():
+                branchArray[17] = True
                 um = wq.queue.get()
                 if not um is STOP:
+                    branchArray[18] = True
                     raise Exception("buggy threadmap")
-        
+                branchArray[19] = True   
+            branchArray[20] = True
+        branchArray[21] = True
         
         # see if there were any errors.  If so raise the first one.  This matches map behaviour.
         # TODO: the traceback doesn't show up nicely.
         # NOTE: TODO: we might want to return the results anyway?  This should be an option.
         if stop_on_error:
+            branchArray[22] = True
             error_ones = list(filter(lambda x:x.exception, results))
             if error_ones:
+                branchArray[23] = True
                 raise error_ones[0].exception
+            branchArray[24] = True   
+        branchArray[25] = True
         
         return map(lambda x:x.result, results)
     else:
+        branchArray[26] = True
         return [wq, results]

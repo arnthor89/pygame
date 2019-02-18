@@ -3,6 +3,7 @@ import cursors_test
 import draw_test
 import sysfont_test
 import sprite_test
+import threads_test
 
 # Coverage tool for measuring how much of a function is covered by tests
 # Note: Is currently only supported by pytohn 3.x not python 2.x
@@ -18,6 +19,7 @@ class coverageTool():
         self.branchArray['draw'] = [False] * 49
         self.branchArray['sysfont'] = [False] * 27
         self.branchArray['add'] = [False] * 24
+        self.branchArray['tmap'] = [False] * 27
 
     def run(self):
         # Test for load_xbm
@@ -131,6 +133,13 @@ class coverageTool():
         ct.setUp(self.branchArray['add'])
         ct.test_switch_layer(self.branchArray['add'])
 
+        # Test for tmap function
+        ct = threads_test.ThreadsModuleTest()
+        ct.test_init()
+        ct.test_tmap(self.branchArray['tmap'])
+        ct.test_tmap__wait(self.branchArray['tmap'])
+        ct.test_quit()
+
 
         self.totCount = 0
         self.TrueCount = 0
@@ -147,6 +156,7 @@ class coverageTool():
         self.present("pygame.sprite.draw", self.branchArray['draw'])
         self.present("pygame.sysfont.sysfont", self.branchArray['sysfont'])
         self.present("pygame.sprite.add", self.branchArray['add'])
+        self.present("pygame.threads.__init__.tmap", self.branchArray['tmap'])
 
         if self.totCount != 0:
             print("Total coverage: " + str(100*self.TrueCount/self.totCount) + "%")
