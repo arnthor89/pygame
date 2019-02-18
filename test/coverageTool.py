@@ -23,19 +23,13 @@ class coverageTool():
         ct = cursors_test.CursorsModuleTest()
         ct.test_compile(self.branchArray['compile'])
 
-        # Test for _draw_line funtion
-        ct = draw_test.PythonDrawLineTest()
-        ct.test_line_color(self.branchArray['_draw_line'])
-        ct.test_line_gaps(self.branchArray['_draw_line'])
-        ct.test_lines_color(self.branchArray['_draw_line'])
-        ct.test_lines_gaps(self.branchArray['_draw_line'])
 
-        # Test for clip_line funtion
+        # Test for _draw_line and clip_line functions (the 2 are done at the same time becasue the belong to the same file)
         ct = draw_test.PythonDrawLineTest()
-        ct.test_line_color(self.branchArray['clip_line'])
-        ct.test_line_gaps(self.branchArray['clip_line'])
-        ct.test_lines_color(self.branchArray['clip_line'])
-        ct.test_lines_gaps(self.branchArray['clip_line'])
+        ct.test_line_color(self.branchArray['_draw_line'], self.branchArray['clip_line'])
+        ct.test_line_gaps(self.branchArray['_draw_line'], self.branchArray['clip_line'])
+        ct.test_lines_color(self.branchArray['_draw_line'], self.branchArray['clip_line'])
+        ct.test_lines_gaps(self.branchArray['_draw_line'], self.branchArray['clip_line'])
 
         self.totCount = 0
         self.TrueCount = 0
