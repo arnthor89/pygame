@@ -7,6 +7,7 @@ import unittest
 import pygame
 from pygame import sprite
 
+import sys
 
 ################################# MODULE LEVEL #################################
 
@@ -430,14 +431,14 @@ class SpriteCollideTest( unittest.TestCase ):
 
 ################################################################################
 
-class AbstractGroupTypeTest( unittest.TestCase ):
-    def setUp(self):
+class AbstractGroupTypeTest(unittest.TestCase):
+    def setUp(self,branchArray):
         self.ag = sprite.AbstractGroup()
         self.ag2 = sprite.AbstractGroup()
-        self.s1 = sprite.Sprite(self.ag)
-        self.s2 = sprite.Sprite(self.ag)
-        self.s3 = sprite.Sprite(self.ag2)
-        self.s4 = sprite.Sprite(self.ag2)
+        self.s1 = sprite.Sprite(branchArray, self.ag)
+        self.s2 = sprite.Sprite(branchArray, self.ag)
+        self.s3 = sprite.Sprite(branchArray, self.ag2)
+        self.s4 = sprite.Sprite(branchArray, self.ag2)
 
         self.s1.image = pygame.Surface((10, 10))
         self.s1.image.fill(pygame.Color('red'))
@@ -463,29 +464,30 @@ class AbstractGroupTypeTest( unittest.TestCase ):
         self.scr = pygame.Surface((20, 20))
         self.scr.fill(pygame.Color('grey'))
 
-    def test_has( self ):
+    def test_has(self, branchArray):
         " See if AbstractGroup.has() works as expected. "
+        print("[***********] Length:"+str(len(self.ag)))
+        sys.stdout.flush()
+        self.assertEqual(True, (self.s1,branchArray) in self.ag)
 
-        self.assertEqual(True, self.s1 in self.ag)
+        self.assertEqual(True, self.ag.has(branchArray, self.s1))
 
-        self.assertEqual(True, self.ag.has(self.s1))
-
-        self.assertEqual(True, self.ag.has([self.s1, self.s2]))
+        self.assertEqual(True, self.ag.has(branchArray, [self.s1, self.s2]))
 
         # see if one of them not being in there.
-        self.assertNotEqual(True, self.ag.has([self.s1, self.s2, self.s3]))
-        self.assertNotEqual(True, self.ag.has(self.s1, self.s2, self.s3))
-        self.assertNotEqual(True, self.ag.has(self.s1,
+        self.assertNotEqual(True, self.ag.has(branchArray, [self.s1, self.s2, self.s3]))
+        self.assertNotEqual(True, self.ag.has(branchArray, self.s1, self.s2, self.s3))
+        self.assertNotEqual(True, self.ag.has(branchArray, self.s1,
                                               sprite.Group(self.s2, self.s3)))
-        self.assertNotEqual(True, self.ag.has(self.s1, [self.s2, self.s3]))
+        self.assertNotEqual(True, self.ag.has(branchArray, self.s1, [self.s2, self.s3]))
 
         # test empty list processing
-        self.assertFalse(self.ag.has(*[]))
-        self.assertFalse(self.ag.has([]))
-        self.assertFalse(self.ag.has([[]]))
+        self.assertFalse(self.ag.has(branchArray, *[]))
+        self.assertFalse(self.ag.has(branchArray, []))
+        self.assertFalse(self.ag.has(branchArray, [[]]))
 
         # see if a second AbstractGroup works.
-        self.assertEqual(True, self.ag2.has(self.s3))
+        self.assertEqual(True, self.ag2.has(branchArray, self.s3))
 
     def test_add(self):
         ag3 = sprite.AbstractGroup()
@@ -533,18 +535,18 @@ class AbstractGroupTypeTest( unittest.TestCase ):
         self.assertTrue(self.ag.has_internal(self.s1))
         self.assertFalse(self.ag.has_internal(self.s3))
 
-    def test_remove(self):
+    def test_remove(self, branchArray):
 
         # Test removal of 1 sprite
         self.ag.remove(self.s1)
         self.assertFalse(self.ag in self.s1.groups())
-        self.assertFalse(self.ag.has(self.s1))
+        self.assertFalse(self.ag.has(branchArray, self.s1))
 
         # Test removal of 2 sprites as 2 arguments
         self.ag2.remove(self.s3, self.s4)
         self.assertFalse(self.ag2 in self.s3.groups())
         self.assertFalse(self.ag2 in self.s4.groups())
-        self.assertFalse(self.ag2.has(self.s3, self.s4))
+        self.assertFalse(self.ag2.has(branchArray, self.s3, self.s4))
 
         # Test removal of 4 sprites as a list containing a sprite and a group
         # containing a sprite and another group containing 2 sprites.
@@ -556,7 +558,7 @@ class AbstractGroupTypeTest( unittest.TestCase ):
         self.assertFalse(self.ag in self.s2.groups())
         self.assertFalse(self.ag in self.s3.groups())
         self.assertFalse(self.ag in self.s4.groups())
-        self.assertFalse(self.ag.has(self.s1, self.s2, self.s3, self.s4))
+        self.assertFalse(self.ag.has(branchArray, self.s1, self.s2, self.s3, self.s4))
 
     def test_remove_internal(self):
 
@@ -591,7 +593,7 @@ class AbstractGroupTypeTest( unittest.TestCase ):
 class LayeredGroupBase:
     def test_get_layer_of_sprite(self, branchArray):
         expected_layer = 666
-        spr = self.sprite()
+        spr = self.sprite(branchArray)
         self.LG.add(branchArray, spr, layer=expected_layer)
         layer = self.LG.get_layer_of_sprite(spr)
 
@@ -602,7 +604,7 @@ class LayeredGroupBase:
 
     def test_add(self, branchArray):
         expected_layer = self.LG._default_layer
-        spr = self.sprite()
+        spr = self.sprite(branchArray)
         self.LG.add(branchArray, spr)
         layer = self.LG.get_layer_of_sprite(spr)
 
@@ -611,7 +613,7 @@ class LayeredGroupBase:
 
     def test_add__sprite_with_layer_attribute(self, branchArray):
         expected_layer = 100
-        spr = self.sprite()
+        spr = self.sprite(branchArray)
         spr._layer = expected_layer
         self.LG.add(branchArray, spr)
         layer = self.LG.get_layer_of_sprite(spr)
@@ -621,7 +623,7 @@ class LayeredGroupBase:
 
     def test_add__passing_layer_keyword(self, branchArray):
         expected_layer = 100
-        spr = self.sprite()
+        spr = self.sprite(branchArray)
         self.LG.add(branchArray, spr, layer=expected_layer)
         layer = self.LG.get_layer_of_sprite(spr)
 
@@ -630,7 +632,7 @@ class LayeredGroupBase:
 
     def test_add__overriding_sprite_layer_attr(self, branchArray):
         expected_layer = 200
-        spr = self.sprite()
+        spr = self.sprite(branchArray)
         spr._layer = 100
         self.LG.add(branchArray, spr, layer=expected_layer)
         layer = self.LG.get_layer_of_sprite(spr)
@@ -639,7 +641,7 @@ class LayeredGroupBase:
         self.assertEqual(layer, expected_layer)
 
     def test_add__adding_sprite_on_init(self):
-        spr = self.sprite()
+        spr = self.sprite(branchArray)
         lrg2 = sprite.LayeredUpdates(spr)
         expected_layer = lrg2._default_layer
         layer = lrg2._spritelayers[spr]
@@ -649,7 +651,7 @@ class LayeredGroupBase:
 
     def test_add__sprite_init_layer_attr(self):
         expected_layer = 20
-        spr = self.sprite()
+        spr = self.sprite(branchArray)
         spr._layer = expected_layer
         lrg2 = sprite.LayeredUpdates(spr)
         layer = lrg2._spritelayers[spr]
@@ -659,7 +661,7 @@ class LayeredGroupBase:
 
     def test_add__sprite_init_passing_layer(self):
         expected_layer = 33
-        spr = self.sprite()
+        spr = self.sprite(branchArray)
         lrg2 = sprite.LayeredUpdates(spr, layer=expected_layer)
         layer = lrg2._spritelayers[spr]
 
@@ -668,7 +670,7 @@ class LayeredGroupBase:
 
     def test_add__sprite_init_overiding_layer(self):
         expected_layer = 33
-        spr = self.sprite()
+        spr = self.sprite(branchArray)
         spr._layer = 55
         lrg2 = sprite.LayeredUpdates(spr, layer=expected_layer)
         layer = lrg2._spritelayers[spr]
@@ -679,7 +681,7 @@ class LayeredGroupBase:
     def test_add__spritelist(self, branchArray):
         expected_layer = self.LG._default_layer
         sprite_count = 10
-        sprites = [self.sprite() for _ in range(sprite_count)]
+        sprites = [self.sprite(branchArray) for _ in range(sprite_count)]
 
         self.LG.add(branchArray, sprites)
 
@@ -694,7 +696,7 @@ class LayeredGroupBase:
         sprites = []
         sprite_and_layer_count = 10
         for i in range(sprite_and_layer_count):
-            sprites.append(self.sprite())
+            sprites.append(self.sprite(branchArray))
             sprites[-1]._layer = i
 
         self.LG.add(branchArray, sprites)
@@ -709,7 +711,7 @@ class LayeredGroupBase:
     def test_add__spritelist_passing_layer(self, branchArray):
         expected_layer = 33
         sprite_count = 10
-        sprites = [self.sprite() for _ in range(sprite_count)]
+        sprites = [self.sprite(branchArray) for _ in range(sprite_count)]
 
         self.LG.add(branchArray, sprites, layer=expected_layer)
 
@@ -725,7 +727,7 @@ class LayeredGroupBase:
         sprites = []
         sprite_and_layer_count = 10
         for i in range(sprite_and_layer_count):
-            sprites.append(self.sprite())
+            sprites.append(self.sprite(branchArray))
             sprites[-1].layer = i
 
         self.LG.add(branchArray, sprites, layer=expected_layer)
@@ -739,7 +741,7 @@ class LayeredGroupBase:
 
     def test_add__spritelist_init(self):
         sprite_count = 10
-        sprites = [self.sprite() for _ in range(sprite_count)]
+        sprites = [self.sprite(branchArray) for _ in range(sprite_count)]
 
         lrg2 = sprite.LayeredUpdates(sprites)
         expected_layer = lrg2._default_layer
@@ -755,7 +757,7 @@ class LayeredGroupBase:
         sprites = []
         sprite_count = 10
         for i in range(sprite_count):
-            sprites.append(self.sprite())
+            sprites.append(self.sprite(branchArray))
             sprites[-1].rect = 0
 
         self.LG.add(branchArray, sprites)
@@ -771,7 +773,7 @@ class LayeredGroupBase:
         sprites = []
         sprite_and_layer_count = 10
         for i in range(sprite_and_layer_count, 0, -1):
-            sprites.append(self.sprite())
+            sprites.append(self.sprite(branchArray))
             sprites[-1]._layer = i
 
         self.LG.add(branchArray, sprites)
@@ -792,7 +794,7 @@ class LayeredGroupBase:
         for i in range(layer_count):
             expected_layers.append(i)
             for j in range(5):
-                sprites.append(self.sprite())
+                sprites.append(self.sprite(branchArray))
                 sprites[-1]._layer = i
         self.LG.add(branchArray, sprites)
 
@@ -804,7 +806,7 @@ class LayeredGroupBase:
         layers = [1, 4, 6, 8, 3, 6, 2, 6, 4, 5, 6, 1, 0, 9, 7, 6, 54, 8, 2,
                   43, 6, 1]
         for lay in layers:
-            self.LG.add(branchArray, self.sprite(), layer=lay)
+            self.LG.add(branchArray, self.sprite(branchArray), layer=lay)
         layers.sort()
 
         for idx, spr in enumerate(self.LG.sprites()):
@@ -814,7 +816,7 @@ class LayeredGroupBase:
 
     def test_change_layer(self, branchArray):
         expected_layer = 99
-        spr = self.sprite()
+        spr = self.sprite(branchArray)
         self.LG.add(branchArray, spr, layer=expected_layer)
 
         self.assertEqual(self.LG._spritelayers[spr], expected_layer)
@@ -825,7 +827,7 @@ class LayeredGroupBase:
         self.assertEqual(self.LG._spritelayers[spr], expected_layer)
 
         expected_layer = 77
-        spr2 = self.sprite()
+        spr2 = self.sprite(branchArray)
         spr2.layer = 55
         self.LG.add(branchArray, spr2)
         self.LG.change_layer(spr2, expected_layer)
@@ -835,7 +837,7 @@ class LayeredGroupBase:
     def test_get_top_layer(self, branchArray):
         layers = [1, 5, 2, 8, 4, 5, 3, 88, 23, 0]
         for i in layers:
-            self.LG.add(branchArray, self.sprite(), layer=i)
+            self.LG.add(branchArray, self.sprite(branchArray), layer=i)
         top_layer = self.LG.get_top_layer()
 
         self.assertEqual(top_layer, self.LG.get_top_layer())
@@ -847,7 +849,7 @@ class LayeredGroupBase:
     def test_get_bottom_layer(self, branchArray):
         layers = [1, 5, 2, 8, 4, 5, 3, 88, 23, 0]
         for i in layers:
-            self.LG.add(branchArray, self.sprite(), layer=i)
+            self.LG.add(branchArray, self.sprite(branchArray), layer=i)
         bottom_layer = self.LG.get_bottom_layer()
 
         self.assertEqual(bottom_layer, self.LG.get_bottom_layer())
@@ -859,8 +861,8 @@ class LayeredGroupBase:
     def test_move_to_front(self, branchArray):
         layers = [1, 5, 2, 8, 4, 5, 3, 88, 23, 0]
         for i in layers:
-            self.LG.add(branchArray, self.sprite(), layer=i)
-        spr = self.sprite()
+            self.LG.add(branchArray, self.sprite(branchArray), layer=i)
+        spr = self.sprite(branchArray)
         self.LG.add(branchArray, spr, layer=3)
 
         self.assertNotEqual(spr, self.LG._spritelist[-1])
@@ -872,8 +874,8 @@ class LayeredGroupBase:
     def test_move_to_back(self, branchArray):
         layers = [1, 5, 2, 8, 4, 5, 3, 88, 23, 0]
         for i in layers:
-            self.LG.add(branchArray, self.sprite(), layer=i)
-        spr = self.sprite()
+            self.LG.add(branchArray, self.sprite(branchArray), layer=i)
+        spr = self.sprite(branchArray)
         self.LG.add(branchArray, spr, layer=55)
 
         self.assertNotEqual(spr, self.LG._spritelist[0])
@@ -885,7 +887,7 @@ class LayeredGroupBase:
     def test_get_top_sprite(self, branchArray):
         layers = [1, 5, 2, 8, 4, 5, 3, 88, 23, 0]
         for i in layers:
-            self.LG.add(branchArray, self.sprite(), layer=i)
+            self.LG.add(branchArray, self.sprite(branchArray), layer=i)
         expected_layer = self.LG.get_top_layer()
         layer = self.LG.get_layer_of_sprite(self.LG.get_top_sprite())
 
@@ -896,7 +898,7 @@ class LayeredGroupBase:
         layers = [1, 4, 5, 6, 3, 7, 8, 2, 1, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4,
                   5, 6, 7, 8, 9, 0, 1, 6, 5, 4, 3, 2]
         for lay in layers:
-            spr = self.sprite()
+            spr = self.sprite(branchArray)
             spr._layer = lay
             self.LG.add(branchArray, spr)
             if lay not in sprites:
@@ -919,7 +921,7 @@ class LayeredGroupBase:
         layers = [3, 2, 3, 2, 3, 3, 2, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 3, 2, 2,
                   3, 2, 3]
         for lay in layers:
-            spr = self.sprite()
+            spr = self.sprite(branchArray)
             spr._layer = lay
             self.LG.add(branchArray, spr)
             if lay==2:
@@ -945,7 +947,7 @@ class LayeredGroupBase:
         self.assertEqual(len(self.LG), len(sprites1) + len(sprites2))
 
     def test_copy(self, branchArray):
-        self.LG.add(branchArray, self.sprite())
+        self.LG.add(branchArray, self.sprite(branchArray))
         spr = self.LG.sprites()[0]
         lg_copy = self.LG.copy()
 
@@ -971,23 +973,23 @@ class LayeredUpdatesTypeTest__DirtySprite(LayeredGroupBase, unittest.TestCase):
 class LayeredDirtyTypeTest__DirtySprite(LayeredGroupBase, unittest.TestCase):
     sprite = sprite.DirtySprite
 
-    def setUp(self):
-        self.LG = sprite.LayeredDirty()
+    def setUp(self, branchArray):
+        self.LG = sprite.LayeredDirty(branchArray)
 
-    def test_repaint_rect(self):
+    def test_repaint_rect(self, branchArray):
         group = self.LG
         surface = pygame.Surface((100, 100))
 
         group.repaint_rect(pygame.Rect(0, 0, 100, 100))
-        group.draw(surface)
+        group.draw(surface, branchArray)
 
-    def test_repaint_rect_with_clip(self):
+    def test_repaint_rect_with_clip(self, branchArray):
         group = self.LG
         surface = pygame.Surface((100, 100))
 
         group.set_clip(pygame.Rect(0, 0, 100, 100))
         group.repaint_rect(pygame.Rect(0, 0, 100, 100))
-        group.draw(surface)
+        group.draw(surface, branchArray)
 
 ############################### SPRITE BASE CLASS ##############################
 #
@@ -999,7 +1001,7 @@ class SpriteBase:
         for Group in self.Groups:
             self.groups.append(Group())
 
-        self.sprite = self.Sprite()
+        self.sprite = self.sprite(branchArray)
 
     def test_add_internal(self):
 
