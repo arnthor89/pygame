@@ -984,6 +984,7 @@ class LayeredDirtyTypeTest__DirtySprite(LayeredGroupBase, unittest.TestCase):
     def test_draw_with_bgd(self):
         group = self.LG
         surface = pygame.Surface((100, 100))
+        bg = pygame.image.load("test/fixtures/data/background.gif")
         self.assertEqual([pygame.Rect(0, 0, 100, 100)], group.draw(surface, bg))
 
 
