@@ -16,6 +16,7 @@ class coverageTool():
         self.branchArray['_draw_line'] = [False] * 18
         self.branchArray['clip_line'] = [False] * 23
         self.branchArray['sysfont'] = [False] * 27
+        self.branchArray['match_font'] = [False] * 15
         self.branchArray['add'] = [False] * 24
 
     def run(self):
@@ -26,7 +27,6 @@ class coverageTool():
         # Test for compile
         ct = cursors_test.CursorsModuleTest()
         ct.test_compile(self.branchArray['compile'])
-
 
         # Test for _draw_line and clip_line functions (the 2 are done at the same time becasue the belong to the same file)
         ct = draw_test.PythonDrawLineTest()
@@ -39,6 +39,8 @@ class coverageTool():
         ct = sysfont_test.SysfontModuleTest()
         ct.test_sysfont(self.branchArray['sysfont'])
 
+        # Test for sysfont function
+        ct = sysfont_test.SysfontModuleTest()
 
         # Test for add, need new instances of the test bc they update the same attribute
         ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
@@ -139,6 +141,7 @@ class coverageTool():
         self.present("pygame.draw_py._draw_line", self.branchArray['_draw_line'])
         self.present("pygame.draw_py.clip_line", self.branchArray['clip_line'])
         self.present("pygame.sysfont.sysfont", self.branchArray['sysfont'])
+        self.present("pygame.sysfont.match_font", self.branchArray['match_font'])
         self.present("pygame.sprite.add", self.branchArray['add'])
 
         if self.totCount != 0:
