@@ -1,6 +1,7 @@
 import unittest
 import cursors_test
 import draw_test
+import sprite_test
 
 # Coverage tool for measuring how much of a function is covered by tests
 # Note: Is currently only supported by pytohn 3.x not python 2.x
@@ -13,6 +14,7 @@ class coverageTool():
         self.branchArray['compile'] = [False] * 10
         self.branchArray['_draw_line'] = [False] * 18
         self.branchArray['clip_line'] = [False] * 23
+        self.branchArray['add'] = [False] * 23
 
     def run(self):
         # Test for load_xbm
@@ -37,6 +39,91 @@ class coverageTool():
         ct.test_lines_color(self.branchArray['clip_line'])
         ct.test_lines_gaps(self.branchArray['clip_line'])
 
+        # Test for add
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])     
+        ct.test_get_layer_of_sprite(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_add(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_add__sprite_with_layer_attribute(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_add__passing_layer_keyword(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_add__overriding_sprite_layer_attr(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_add__spritelist(self.branchArray['add'])
+        
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_add__spritelist_with_layer_attr(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_add__spritelist_passing_layer(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_add__spritelist_overriding_layer(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_remove__sprite(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_sprites(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_layers(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_add__layers_are_correct(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_change_layer(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_get_top_layer(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_get_bottom_layer(self.branchArray['add'])
+        
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_move_to_front(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_move_to_back(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_get_top_sprite(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_get_sprites_from_layer(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_switch_layer(self.branchArray['add'])
+
         self.totCount = 0
         self.TrueCount = 0
         for key in self.branchArray:
@@ -49,6 +136,7 @@ class coverageTool():
         self.present("pygame.cursors.compile", self.branchArray['compile'])
         self.present("pygame.draw_py._draw_line", self.branchArray['_draw_line'])
         self.present("pygame.draw_py.clip_line", self.branchArray['clip_line'])
+        self.present("pygame.sprite.add", self.branchArray['add'])
 
         if self.totCount != 0:
             print("Total coverage: " + str(100*self.TrueCount/self.totCount) + "%")
