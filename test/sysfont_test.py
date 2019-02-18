@@ -7,6 +7,7 @@ class SysfontModuleTest(unittest.TestCase):
     FONT = None
     FONTSLIST = []
     PREFERED_FONT = 'Arial'
+    UNKOWN_FONT = '1234567890'
     
     pygame.font.init()
     FONTSLIST = pygame.font.get_fonts()
@@ -27,51 +28,52 @@ class SysfontModuleTest(unittest.TestCase):
     def test_initsysfonts_darwin(self):
         self.assertTrue(len(pygame.sysfont.get_fonts()) > 10)
 
-    def test_sysfont_good(self):
-        arial = pygame.font.SysFont(self.FONT, 40, 1, 1)
-        self.assertTrue(arial.get_bold())
-        self.assertTrue(arial.get_italic())
-
     @unittest.skipIf('Linux' not in platform.platform(), 'Not linux we skip.')
     def test_initsysfonts_unix(self):
         self.assertTrue(len(pygame.sysfont.get_fonts()) > 1)
 
-    def test_sysfont_notRecognized(self):
-        arial = pygame.sysfont.SysFont('1234567890', 40, 1, 1)
-        self.assertTrue(arial.get_bold())
-        self.assertTrue(arial.get_italic())
+    @unittest.skipIf(not FONT, 'No fonts found, skip')
+    def test_sysfont_known(self):
+        font = pygame.font.SysFont(self.FONT, 40, 1, 1)
+        self.assertTrue(font.get_bold())
+        self.assertTrue(font.get_italic())
+
+    def test_sysfont_unkown(self):
+        font = pygame.sysfont.SysFont(self.UNKOWN_FONT, 40, 1, 1)
+        self.assertTrue(font.get_bold())
+        self.assertTrue(font.get_italic())
 
     @unittest.skipIf(not FONT, 'No fonts found, skip')
     def test_sysfont_setFontName(self):
-        fontname, bold, italic = pygame.sysfont.set_font_name(self.FONT, 0, 0)  
+        fontname, bold, italic = pygame.sysfont.get_font_name(self.FONT, 0, 0)  
         self.assertTrue(fontname)
         self.assertFalse(bold)
         self.assertFalse(italic)
 
     @unittest.skipIf(not FONT, 'No fonts found, skip')
     def test_sysfont_setFontNameWithStyles(self):
-        fontname = pygame.sysfont.set_font_name(self.FONT, 1, 1)  
+        fontname = pygame.sysfont.get_font_name(self.FONT, 1, 1)  
         self.assertTrue(fontname)
 
     def test_sysfont_setFontNameNoName(self):
-        fontname = pygame.sysfont.set_font_name(None, 0, 0)  
+        fontname = pygame.sysfont.get_font_name(None, 0, 0)  
         self.assertIsNone(fontname)
 
     @unittest.skipIf(not FONT, 'No fonts found, skip')
     def test_sysfont_setNoStyles(self):
-        fontname, bold, italic = pygame.sysfont.set_styles(self.FONT, 0, 0)  
+        fontname, bold, italic = pygame.sysfont.get_styles(self.FONT, 0, 0)  
         self.assertTrue(fontname)
         self.assertFalse(bold)
         self.assertFalse(italic)
 
     def test_sysfont_setStylesNoName(self):
-        fontname, bold, italic = pygame.sysfont.set_styles(None, 0, 0)  
+        fontname, bold, italic = pygame.sysfont.get_styles(None, 0, 0)  
         self.assertIsNone(fontname)
         self.assertFalse(bold)
         self.assertFalse(italic)
 
     def test_sysfont_setInvalidFont(self):
-        fontname, bold, italic = pygame.sysfont.set_styles('1234567890', 1, 1)  
+        fontname, bold, italic = pygame.sysfont.get_styles(self.UNKOWN_FONT, 1, 1)  
         self.assertIsNone(fontname)
         self.assertFalse(bold)
         self.assertFalse(italic)

@@ -325,7 +325,7 @@ def SysFont(name, size, bold=False, italic=False, constructor=None):
     gotbold = gotitalic = False
     fontname = None
 
-    fontname, gotbold, gotitalic = set_font_name(name, bold, italic)
+    fontname, gotbold, gotitalic = get_font_name(name, bold, italic)
 
     set_bold = set_italic = False
     if bold and not gotbold:
@@ -335,8 +335,10 @@ def SysFont(name, size, bold=False, italic=False, constructor=None):
 
     return constructor(fontname, size, set_bold, set_italic)
 
-def set_font_name(name, bold=False, italic=False):
-    """set_font_name(name, bold=False, italic=False) -> fontname, bold, italic
+def get_font_name(name, bold=False, italic=False):
+    """get_font_name(name, bold=False, italic=False) -> fontname, bold, italic
+       Loops through list of comma separated font names. Returns the first 
+       font name it finds in the system.
     """
     if not name:
         return None
@@ -348,13 +350,18 @@ def set_font_name(name, bold=False, italic=False):
     for name in allnames.split(','):
         name = _simplename(name)
 
-        fontname, gotbold, gotitalic = set_styles(name, bold, italic)
+        fontname, gotbold, gotitalic = get_styles(name, bold, italic)
         if fontname:
             break
 
     return fontname, gotbold, gotitalic
 
-def set_styles(name, bold=False, italic=False):
+def get_styles(name, bold=False, italic=False):
+    """get_styles(name, bold=False, italic=False) -> fontname, bold, italic
+       Tries to get styles for a specific font name, if the specific
+       font you ask for is not available, a reasonable alternative
+       may be used.
+    """
     styles = Sysfonts.get(name)
     if not styles:
         styles = Sysalias.get(name)
