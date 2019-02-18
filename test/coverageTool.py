@@ -15,6 +15,7 @@ class coverageTool():
         self.branchArray['compile'] = [False] * 10
         self.branchArray['_draw_line'] = [False] * 18
         self.branchArray['clip_line'] = [False] * 23
+        self.branchArray['draw'] = [False] * 49
         self.branchArray['sysfont'] = [False] * 27
         self.branchArray['add'] = [False] * 24
 
@@ -35,10 +36,15 @@ class coverageTool():
         ct.test_lines_color(self.branchArray['_draw_line'], self.branchArray['clip_line'])
         ct.test_lines_gaps(self.branchArray['_draw_line'], self.branchArray['clip_line'])
 
+        # Test for draw function
+        ct = sprite_test.LayeredDirtyTypeTest__DirtySprite()
+        ct.setUp(self.branchArray['draw'])
+        ct.test_repaint_rect(self.branchArray['draw'])
+        ct.test_repaint_rect_with_clip(self.branchArray['draw'])
+
         # Test for sysfont function
         ct = sysfont_test.SysfontModuleTest()
         ct.test_sysfont(self.branchArray['sysfont'])
-
 
         # Test for add, need new instances of the test bc they update the same attribute
         ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
@@ -138,6 +144,7 @@ class coverageTool():
         self.present("pygame.cursors.compile", self.branchArray['compile'])
         self.present("pygame.draw_py._draw_line", self.branchArray['_draw_line'])
         self.present("pygame.draw_py.clip_line", self.branchArray['clip_line'])
+        self.present("pygame.sprite.draw", self.branchArray['draw'])
         self.present("pygame.sysfont.sysfont", self.branchArray['sysfont'])
         self.present("pygame.sprite.add", self.branchArray['add'])
 

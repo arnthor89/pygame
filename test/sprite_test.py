@@ -971,23 +971,23 @@ class LayeredUpdatesTypeTest__DirtySprite(LayeredGroupBase, unittest.TestCase):
 class LayeredDirtyTypeTest__DirtySprite(LayeredGroupBase, unittest.TestCase):
     sprite = sprite.DirtySprite
 
-    def setUp(self):
-        self.LG = sprite.LayeredDirty()
+    def setUp(self, branchArray):
+        self.LG = sprite.LayeredDirty(branchArray)
 
-    def test_repaint_rect(self):
+    def test_repaint_rect(self, branchArray):
         group = self.LG
         surface = pygame.Surface((100, 100))
 
         group.repaint_rect(pygame.Rect(0, 0, 100, 100))
-        group.draw(surface)
+        group.draw(surface, branchArray)
 
-    def test_repaint_rect_with_clip(self):
+    def test_repaint_rect_with_clip(self, branchArray):
         group = self.LG
         surface = pygame.Surface((100, 100))
 
         group.set_clip(pygame.Rect(0, 0, 100, 100))
         group.repaint_rect(pygame.Rect(0, 0, 100, 100))
-        group.draw(surface)
+        group.draw(surface, branchArray)
 
 ############################### SPRITE BASE CLASS ##############################
 #
