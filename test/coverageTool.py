@@ -17,6 +17,7 @@ class coverageTool():
         self.branchArray['clip_line'] = [False] * 23
         self.branchArray['sysfont'] = [False] * 27
         self.branchArray['add'] = [False] * 24
+        self.branchArray['has'] = [False] * 25
 
     def run(self):
         # Test for load_xbm
@@ -125,6 +126,14 @@ class coverageTool():
         ct.setUp(self.branchArray['add'])
         ct.test_switch_layer(self.branchArray['add'])
 
+        # Test for has
+        ct = sprite_test.AbstractGroupTypeTest()
+        ct.setUp(self.branchArray['has'])
+        ct.test_has(self.branchArray['has'])
+
+        ct = sprite_test.AbstractGroupTypeTest()
+        ct.setUp(self.branchArray['has'])
+        ct.test_remove(self.branchArray['has'])
 
         self.totCount = 0
         self.TrueCount = 0
@@ -140,6 +149,7 @@ class coverageTool():
         self.present("pygame.draw_py.clip_line", self.branchArray['clip_line'])
         self.present("pygame.sysfont.sysfont", self.branchArray['sysfont'])
         self.present("pygame.sprite.add", self.branchArray['add'])
+        self.present("pygame.sprite.has", self.branchArray['has'])
 
         if self.totCount != 0:
             print("Total coverage: " + str(100*self.TrueCount/self.totCount) + "%")
