@@ -213,7 +213,16 @@ class PythonDrawLineTest(LineMixin, unittest.TestCase):
         self.assertEqual(surf1.get_at((0, 0)), RED)
         self.assertEqual(surf1.get_at((1, 1)), RED)      #see the https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
         self.assertEqual(surf1.get_at((2, 1)), RED)
-
+    
+    def test__draw_line_rather_horizontal_2(self):
+        #Case 1b: Rather horizontal line (abs_slope < 1) where x2 < x1
+        surf1 = pygame.Surface((4,4))
+        color = RED
+        draw_py._draw_line(surf1, color, 2, 1, 0, 0)
+        self.assertEqual(surf1.get_at((0, 0)), RED)
+        self.assertEqual(surf1.get_at((1, 1)), RED)      #see the https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
+        self.assertEqual(surf1.get_at((2, 1)), RED)
+    
     def test__draw_line_rather_vertical_1(self):
         #Case 2a: Rather vertical line (abs_slope >= 1) where y2 > y1
         surf2 = pygame.Surface((4,4))
@@ -222,6 +231,17 @@ class PythonDrawLineTest(LineMixin, unittest.TestCase):
         self.assertEqual(surf2.get_at((0, 0)), RED)
         self.assertEqual(surf2.get_at((1, 1)), RED)      #see the https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
         self.assertEqual(surf2.get_at((1, 2)), RED)
+    
+    def test__draw_line_rather_vertical_2(self):
+        #Case 2b: Rather vertical line (abs_slope >= 1) where y2 < y1
+        surf2 = pygame.Surface((4,4))
+        color = RED
+        draw_py._draw_line(surf2, color, 1, 2, 0, 0)
+        self.assertEqual(surf2.get_at((0, 0)), RED)
+        self.assertEqual(surf2.get_at((1, 1)), RED)      #see the https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
+        self.assertEqual(surf2.get_at((1, 2)), RED)
+        
+
 class DrawLineTest(LineMixin, unittest.TestCase):
     '''Test draw functions "aaline", "line", "aalines" and "lines".'''
 
@@ -517,24 +537,6 @@ class PythonAntiAliasingLineTest(AntiAliasedLineMixin, unittest.TestCase):
 
     def draw_aaline(self, color, from_point, to_point):
         draw_py.draw_aaline(self.surface, color, from_point, to_point, 1)
-
-class DrawPyModuleTest(unittest.TestCase):
-
-    def test__draw_line(self):
-        surf1 = pygame.Surface((4,4))
-        color = RED
-        #Case 1: Rather horizontal line
-        draw_py._draw_line(surf1, color, 0, 0, 2, 1)
-        self.assertEqual(surf1.get_at((0, 0)), RED)
-        self.assertEqual(surf1.get_at((1, 1)), RED)      #see the https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
-        self.assertEqual(surf1.get_at((2, 1)), RED)
-        #Case 2: Rather vertical line
-        surf2 = pygame.Surface((4,4))
-        draw_py._draw_line(surf2, color, 0, 0, 1, 2)
-        self.assertEqual(surf2.get_at((0, 0)), RED)
-        self.assertEqual(surf2.get_at((1, 1)), RED)      #see the https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
-        self.assertEqual(surf2.get_at((1, 2)), RED)
-
 
 class DrawModuleTest(unittest.TestCase):
 
