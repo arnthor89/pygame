@@ -293,7 +293,7 @@ def font_constructor(fontpath, size, bold, italic):
 
 # the exported functions
 
-def SysFont(name, size, bold=False, italic=False, constructor=None):
+def SysFont(name, size, branchArray, bold=False, italic=False, constructor=None):
     """pygame.font.SysFont(name, size, bold=False, italic=False, constructor=None) -> Font
        create a pygame Font from system font resources
 
@@ -315,25 +315,47 @@ def SysFont(name, size, bold=False, italic=False, constructor=None):
        signature constructor(fontpath, size, bold, italic) which returns
        a Font instance. If None, a pygame.font.Font object is created.
     """
+    #0
+    branchArray[0] = True
     if constructor is None:
+        #1
+        branchArray[1] = True
         constructor = font_constructor
 
+    #2
+    branchArray[2] = True
     if not Sysfonts:
+        #3
+        branchArray[3] = True
         initsysfonts()
 
+    #4
+    branchArray[4] = True
     gotbold = gotitalic = False
     fontname = None
     if name:
+        #5
+        branchArray[5] = True
         allnames = name
         for name in allnames.split(','):
+            #6
+            branchArray[6] = True
             name = _simplename(name)
             styles = Sysfonts.get(name)
             if not styles:
+                #7
+                branchArray[7] = True
                 styles = Sysalias.get(name)
+            #8
+            branchArray[8] = True
             if styles:
+                #9
+                branchArray[9] = True
                 plainname = styles.get((False, False))
                 fontname = styles.get((bold, italic))
                 if not fontname and not plainname:
+                    #10
+                    branchArray[10] = True
                     # Neither requested style, nor plain font exists, so
                     # return a font with the name requested, but an
                     # arbitrary style.
@@ -342,23 +364,55 @@ def SysFont(name, size, bold=False, italic=False, constructor=None):
                     # unbold or unitalicize anything, but it can
                     # fake bold and/or fake italicize.
                     if bold and style[0]:
+                        #11
+                        branchArray[11] = True
                         gotbold = True
+                    #12
+                    branchArray[12] = True
                     if italic and style[1]:
+                        #13
+                        branchArray[13] = True
                         gotitalic = True
+                    #14
+                    branchArray[14] = True
                 elif not fontname:
+                    #15
+                    branchArray[15] = True
                     fontname = plainname
                 elif plainname != fontname:
+                    #16
+                    branchArray[16] = True
                     gotbold = bold
                     gotitalic = italic
+                #17
+                branchArray[17] = True
+            #18
+            branchArray[18] = True
             if fontname:
+                #19
+                branchArray[19] = True
                 break
+            #20
+            branchArray[20] = True
 
+        #21
+        branchArray[21] = True
+    #22
+    branchArray[22] = True
     set_bold = set_italic = False
     if bold and not gotbold:
+        #23
+        branchArray[23] = True
         set_bold = True
+    #24
+    branchArray[24] = True
     if italic and not gotitalic:
+        #25
+        branchArray[25] = True
         set_italic = True
 
+    #26
+    branchArray[26] = True
     return constructor(fontname, size, set_bold, set_italic)
 
 

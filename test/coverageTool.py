@@ -1,6 +1,7 @@
 import unittest
 import cursors_test
 import draw_test
+import sysfont_test
 
 # Coverage tool for measuring how much of a function is covered by tests
 # Note: Is currently only supported by pytohn 3.x not python 2.x
@@ -13,6 +14,7 @@ class coverageTool():
         self.branchArray['compile'] = [False] * 10
         self.branchArray['_draw_line'] = [False] * 18
         self.branchArray['clip_line'] = [False] * 23
+        self.branchArray['sysfont'] = [False] * 27
 
     def run(self):
         # Test for load_xbm
@@ -37,6 +39,10 @@ class coverageTool():
         ct.test_lines_color(self.branchArray['clip_line'])
         ct.test_lines_gaps(self.branchArray['clip_line'])
 
+        # Test for sysfont function
+        ct = sysfont_test.SysfontModuleTest()
+        ct.test_sysfont(self.branchArray['sysfont'])
+
         self.totCount = 0
         self.TrueCount = 0
         for key in self.branchArray:
@@ -49,6 +55,7 @@ class coverageTool():
         self.present("pygame.cursors.compile", self.branchArray['compile'])
         self.present("pygame.draw_py._draw_line", self.branchArray['_draw_line'])
         self.present("pygame.draw_py.clip_line", self.branchArray['clip_line'])
+        self.present("pygame.sysfont.sysfont", self.branchArray['sysfont'])
 
         if self.totCount != 0:
             print("Total coverage: " + str(100*self.TrueCount/self.totCount) + "%")

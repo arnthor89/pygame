@@ -152,7 +152,7 @@ def get_init():
 
    return _get_init()
 
-def SysFont(name, size, bold=0, italic=0, constructor=None):
+def SysFont(name, size, branchArray, bold=0, italic=0, constructor=None):
     """pygame.ftfont.SysFont(name, size, bold=False, italic=False, constructor=None) -> Font
        create a pygame Font from system font resources (freetype alternative)
 
@@ -181,7 +181,7 @@ def SysFont(name, size, bold=0, italic=0, constructor=None):
             font.set_italic(italic)
             return font
 
-    return _SysFont(name, size, bold, italic, constructor)
+    return _SysFont(name, size, branchArray, bold, italic, constructor)
 
 del _Font, get_default_resolution, encode_file_path, as_unicode, as_bytes
 

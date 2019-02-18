@@ -1,7 +1,7 @@
 import unittest
 import platform
 
-class SysfontModuleTest(unittest.TestCase):
+class SysfontModuleTest():
     def todo_test_create_aliases(self):
         self.fail()
 
@@ -13,10 +13,10 @@ class SysfontModuleTest(unittest.TestCase):
         import pygame.sysfont
         self.assertTrue(len(pygame.sysfont.get_fonts()) > 10)
 
-    def test_sysfont(self):
+    def test_sysfont(self, branchArray):
         import pygame.font
         pygame.font.init()
-        arial = pygame.font.SysFont('Arial', 40)
+        arial = pygame.font.SysFont('Arial', 40, branchArray)
 
     def todo_test_initsysfonts_unix(self):
         self.fail()
