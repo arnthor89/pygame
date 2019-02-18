@@ -623,7 +623,7 @@ class LayeredUpdates(AbstractGroup):
 
     _init_rect = Rect(0, 0, 0, 0)
 
-    def __init__(self, *sprites, **kwargs):
+    def __init__(self, branchArray, *sprites, **kwargs):
         """initialize an instance of LayeredUpdates with the given attributes
 
         You can set the default layer through kwargs using 'default_layer'
@@ -641,7 +641,7 @@ class LayeredUpdates(AbstractGroup):
         AbstractGroup.__init__(self)
         self._default_layer = kwargs.get('default_layer', 0)
 
-        self.add(*sprites, **kwargs)
+        self.add(branchArray, *sprites, **kwargs)
 
     def add_internal(self, sprite, layer=None):
         """Do not use this method directly.
@@ -679,7 +679,7 @@ class LayeredUpdates(AbstractGroup):
             mid += 1
         sprites.insert(mid, sprite)
 
-    def add(self, *sprites, **kwargs):
+    def add(self, branchArray, *sprites, **kwargs):
         """add a sprite or sequence of sprites to a group
 
         LayeredUpdates.add(*sprites, **kwargs): return None
@@ -691,39 +691,84 @@ class LayeredUpdates(AbstractGroup):
         used to add the sprites.
 
         """
-
+        #0 
+        branchArray[0] = True
         if not sprites:
+            #1
+            branchArray[1] = True
             return
+        #2
+        branchArray[2] = True
         if 'layer' in kwargs:
+            #3
+            branchArray[3] = True
             layer = kwargs['layer']
         else:
+            #4
+            branchArray[4] = True
             layer = None
+        #5
+        branchArray[5] = True
         for sprite in sprites:
             # It's possible that some sprite is also an iterator.
             # If this is the case, we should add the sprite itself,
             # and not the iterator object.
+            #6
+            branchArray[6] = True
             if isinstance(sprite, Sprite):
+                #7
+                branchArray[7] = True
                 if not self.has_internal(sprite):
+                    #8
+                    branchArray[8] = True
                     self.add_internal(sprite, layer)
                     sprite.add_internal(self)
+                #9
+                branchArray[9] = True
             else:
+                #10
+                branchArray[10] = True
                 try:
                     # See if sprite is an iterator, like a list or sprite
                     # group.
-                    self.add(*sprite, **kwargs)
+                    #11
+                    branchArray[11] = True
+                    self.add(branchArray, *sprite, **kwargs)
                 except (TypeError, AttributeError):
                     # Not iterable. This is probably a sprite that is not an
                     # instance of the Sprite class or is not an instance of a
                     # subclass of the Sprite class. Alternately, it could be an
                     # old-style sprite group.
+                    #12
+                    branchArray[12] = True
                     if hasattr(sprite, '_spritegroup'):
+                        #13
+                        branchArray[13] = True
                         for spr in sprite.sprites():
+                            #14
+                            branchArray[14] = True
                             if not self.has_internal(spr):
+                                #15
+                                branchArray[15] = True
                                 self.add_internal(spr, layer)
                                 spr.add_internal(self)
+                            #16
+                            branchArray[16] = True
+                        #17
+                        branchArray[17] = True
                     elif not self.has_internal(sprite):
+                        #19
+                        branchArray[19] = True
                         self.add_internal(sprite, layer)
                         sprite.add_internal(self)
+                    #20
+                    branchArray[20] = True
+                #21
+                branchArray[21] = True
+            #22
+            branchArray[22] = True
+        #23
+        branchArray[23] = True
 
     def remove_internal(self, sprite):
         """Do not use this method directly.
@@ -931,7 +976,7 @@ class LayeredUpdates(AbstractGroup):
                 break
         return sprites
 
-    def switch_layer(self, layer1_nr, layer2_nr):
+    def switch_layer(self, branchArray, layer1_nr, layer2_nr):
         """switch the sprites from layer1_nr to layer2_nr
 
         LayeredUpdates.switch_layer(layer1_nr, layer2_nr): return None
@@ -943,7 +988,7 @@ class LayeredUpdates(AbstractGroup):
         sprites1 = self.remove_sprites_of_layer(layer1_nr)
         for spr in self.get_sprites_from_layer(layer2_nr):
             self.change_layer(spr, layer1_nr)
-        self.add(layer=layer2_nr, *sprites1)
+        self.add(branchArray, layer=layer2_nr, *sprites1)
 
 
 class LayeredDirty(LayeredUpdates):
