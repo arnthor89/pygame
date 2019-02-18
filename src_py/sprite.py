@@ -105,7 +105,7 @@ except:
 
 class Sprite(object):
     """simple base class for visible game objects
-
+f
     pygame.sprite.Sprite(*groups): return Sprite
 
     The base class for visible game objects. Derived classes will want to
@@ -118,12 +118,12 @@ class Sprite(object):
 
     """
 
-    def __init__(self, *groups):
+    def __init__(self, branchArray, *groups):
         self.__g = {} # The groups the sprite is in
         if groups:
-            self.add(*groups)
+            self.add(branchArray,*groups)
 
-    def add(self, *groups):
+    def add(self, branchArray, *groups):
         """add the sprite to groups
 
         Sprite.add(*groups): return None
@@ -141,7 +141,7 @@ class Sprite(object):
             else:
                 self.add(*group)
 
-    def remove(self, *groups):
+    def remove(self, branchArray, *groups):
         """remove the sprite from groups
 
         Sprite.remove(*groups): return None
@@ -153,7 +153,7 @@ class Sprite(object):
         has = self.__g.__contains__
         for group in groups:
             if hasattr(group, '_spritegroup'):
-                if has(group):
+                if has(branchArray, group):
                     group.remove_internal(self)
                     self.remove_internal(group)
             else:
@@ -340,8 +340,10 @@ class AbstractGroup(object):
     def __iter__(self):
         return iter(self.sprites())
 
-    def __contains__(self, sprite):
-        return self.has(sprite)
+    def __contains__(self, tuple):
+        sprite = tuple[0]
+        branchArray = tuple[1]
+        return self.has(branchArray, sprite)
 
     def add(self, *sprites):
         """add sprite(s) to group
@@ -410,7 +412,7 @@ class AbstractGroup(object):
                         self.remove_internal(sprite)
                         sprite.remove_internal(self)
 
-    def has(self, *sprites):
+    def has(self, branchArray, *sprites):
         """ask if group has a sprite or sprites
 
         Group.has(sprite or group, ...): return bool
@@ -420,33 +422,83 @@ class AbstractGroup(object):
         'in' operator, e.g. 'sprite in group', 'subgroup in group'.
 
         """
+        #0
+        branchArray[0] = True
         return_value = False
 
         for sprite in sprites:
+            #1
+            branchArray[1] = True
             if isinstance(sprite, Sprite):
+                #2
+                branchArray[2] = True
                 # Check for Sprite instance's membership in this group
                 if self.has_internal(sprite):
+                    #3 
+                    branchArray[3] = True
                     return_value = True
                 else:
+                    #4
+                    branchArray[4] = True
                     return False
+                #5
+                branchArray[5] = True
             else:
+                #6
+                branchArray[6] = True
                 try:
-                    if self.has(*sprite):
+                    #7
+                    branchArray[7] = True
+                    if self.has(branchArray, *sprite):
+                        #8
+                        branchArray[8] = True
                         return_value = True
                     else:
+                        #9
+                        branchArray[9] = True
                         return False
+                    #10
+                    branchArray[10] = True
                 except (TypeError, AttributeError):
+                    #11
+                    branchArray[11] = True
                     if hasattr(sprite, '_spritegroup'):
+                        #12
+                        branchArray[12] = True
                         for spr in sprite.sprites():
+                            #13
+                            branchArray[13] = True
                             if self.has_internal(spr):
+                                #14
+                                branchArray[14] = True
                                 return_value = True
                             else:
+                                #15
+                                branchArray[15] = True
                                 return False
+                            #16
+                            branchArray[16] = True
+                        #17
+                        branchArray[17] = True
                     else:
+                        #18
+                        branchArray[18] = True
                         if self.has_internal(sprite):
+                            #19
+                            branchArray[19] = True
                             return_value = True
                         else:
+                            #20 
+                            branchArray[20] = True
                             return False
+                        #21
+                        branchArray[21] = True
+                    #22
+                    branchArray[22] = True
+                #23
+                branchArray[23] = True
+        #24
+        branchArray[24] = True
 
         return return_value
 
