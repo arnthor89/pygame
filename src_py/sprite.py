@@ -1119,7 +1119,7 @@ class LayeredDirty(LayeredUpdates):
 
         LayeredUpdates.add_internal(self, sprite, layer)
 
-    def draw(self, surface, bgd=None):
+    def draw(self, surface, branchArray, bgd=None):
         """draw all sprites in the right order onto the given surface
 
         LayeredDirty.draw(surface, bgd=None): return Rect_list
@@ -1128,12 +1128,17 @@ class LayeredDirty(LayeredUpdates):
         value that is not None, then the bgd argument has no effect.
 
         """
+        #0
+        branchArray[0] = True
         # speedups
         _orig_clip = surface.get_clip()
         _clip = self._clip
         if _clip is None:
+            #1
+            branchArray[1] = True
             _clip = _orig_clip
-
+        #2
+        branchArray[2] = True
         _surf = surface
         _sprites = self._spritelist
         _old_rect = self.spritedict
@@ -1143,7 +1148,11 @@ class LayeredDirty(LayeredUpdates):
         _surf_blit = _surf.blit
         _rect = Rect
         if bgd is not None:
+            #3
+            branchArray[3] = True
             self._bgd = bgd
+        #4
+        branchArray[4] = True
         _bgd = self._bgd
         init_rect = self._init_rect
 
@@ -1152,55 +1161,101 @@ class LayeredDirty(LayeredUpdates):
         # 0. decide whether to render with update or flip
         start_time = get_ticks()
         if self._use_update: # dirty rects mode
+            #5
+            branchArray[5] = True
             # 1. find dirty area on screen and put the rects into _update
             # still not happy with that part
             for spr in _sprites:
+                #6
+                branchArray[6] = True
                 if 0 < spr.dirty:
+                    #7
+                    branchArray[7] = True
                     # chose the right rect
                     if spr.source_rect:
+                        #8
+                        branchArray[8] = True
                         _union_rect = _rect(spr.rect.topleft,
                                             spr.source_rect.size)
                     else:
+                        #9
+                        branchArray[9] = True
                         _union_rect = _rect(spr.rect)
-
+                    #10
+                    branchArray[10] = True
                     _union_rect_collidelist = _union_rect.collidelist
                     _union_rect_union_ip = _union_rect.union_ip
                     i = _union_rect_collidelist(_update)
                     while -1 < i:
+                        #11
+                        branchArray[11] = True
                         _union_rect_union_ip(_update[i])
                         del _update[i]
                         i = _union_rect_collidelist(_update)
+                    #12
+                    branchArray[12] = True
                     _update_append(_union_rect.clip(_clip))
 
                     if _old_rect[spr] is not init_rect:
+                        #13
+                        branchArray[13] = True
                         _union_rect = _rect(_old_rect[spr])
                         _union_rect_collidelist = _union_rect.collidelist
                         _union_rect_union_ip = _union_rect.union_ip
                         i = _union_rect_collidelist(_update)
                         while -1 < i:
+                            #14
+                            branchArray[14] = True
                             _union_rect_union_ip(_update[i])
                             del _update[i]
                             i = _union_rect_collidelist(_update)
+                        #15
+                        branchArray[15] = True
                         _update_append(_union_rect.clip(_clip))
+                    #16
+                    branchArray[16] = True
+                #17
+                branchArray[17] = True
+            #18
+            branchArray[18] = True
             # can it be done better? because that is an O(n**2) algorithm in
             # worst case
 
             # clear using background
             if _bgd is not None:
+                #19
+                branchArray[19] = True
                 for rec in _update:
+                    #20
+                    branchArray[20] = True
                     _surf_blit(_bgd, rec, rec)
-
+                #21
+                branchArray[21] = True
+            #22
+            branchArray[22] = True
             # 2. draw
             for spr in _sprites:
+                #23
+                branchArray[23] = True
                 if 1 > spr.dirty:
+                    #24
+                    branchArray[24] = True
                     if spr._visible:
+                        #25
+                        branchArray[25] = True
                         # sprite not dirty; blit only the intersecting part
                         _spr_rect = spr.rect
                         if spr.source_rect is not None:
+                            #26
+                            branchArray[26] = True
                             _spr_rect = Rect(spr.rect.topleft,
                                              spr.source_rect.size)
+                        #27
+                        branchArray[27] = True
                         _spr_rect_clip = _spr_rect.clip
                         for idx in _spr_rect.collidelistall(_update):
+                            #28
+                            branchArray[28] = True
                             # clip
                             clip = _spr_rect_clip(_update[idx])
                             _surf_blit(spr.image,
@@ -1210,35 +1265,72 @@ class LayeredDirty(LayeredUpdates):
                                         clip[2],
                                         clip[3]),
                                        spr.blendmode)
+                        #29
+                        branchArray[29] = True
+                    #30
+                    branchArray[30] = True
                 else: # dirty sprite
+                    #31
+                    branchArray[31] = True
                     if spr._visible:
+                        #32
+                        branchArray[32] = True
                         _old_rect[spr] = _surf_blit(spr.image,
                                                     spr.rect,
                                                     spr.source_rect,
                                                     spr.blendmode)
+                    #33
+                    branchArray[33] = True
                     if spr.dirty == 1:
+                        #34
+                        branchArray[34] = True
                         spr.dirty = 0
+                    #35
+                    branchArray[35] = True
+                #36
+                branchArray[36] = True
+            #37
+            branchArray[37] = True
             _ret = list(_update)
         else: # flip, full screen mode
+            #38
+            branchArray[38] = True
             if _bgd is not None:
+                #39
+                branchArray[39] = True
                 _surf_blit(_bgd, (0, 0))
+            #40
+            branchArray[40] = True
             for spr in _sprites:
+                #41
+                branchArray[41] = True
                 if spr._visible:
+                    #42
+                    branchArray[42] = True
                     _old_rect[spr] = _surf_blit(spr.image,
                                                 spr.rect,
                                                 spr.source_rect,
                                                 spr.blendmode)
+                #43
+                branchArray[43] = True
+            #44
+            branchArray[44] = True
             _ret = [_rect(_clip)] # return only the part of the screen changed
-
-
+        #45
+        branchArray[45] = True
         # timing for switching modes
         # How may a good threshold be found? It depends on the hardware.
         end_time = get_ticks()
         if end_time-start_time > self._time_threshold:
+            #46
+            branchArray[46] = True
             self._use_update = False
         else:
+            #47
+            branchArray[47] = True
             self._use_update = True
-
+        #48
+        branchArray[48] = True
 ##        # debug
 ##        print "               check: using dirty rects:", self._use_update
 

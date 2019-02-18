@@ -78,7 +78,7 @@ class WorkerQueueTypeTest(unittest.TestCase):
 
 
 class ThreadsModuleTest(unittest.TestCase):
-    def todo_test_benchmark_workers(self):
+    def todo_test_benchmark_workers(self, branchArray):
         "tags:long_running"
 
         # __doc__ (as of 2008-06-28) for pygame.threads.benchmark_workers:
@@ -108,7 +108,7 @@ class ThreadsModuleTest(unittest.TestCase):
 
         self.assertIsNone(threads._wq)
 
-    def test_tmap(self):
+    def test_tmap(self, branchArray):
         # __doc__ (as of 2008-06-28) for pygame.threads.tmap:
 
           # like map, but uses a thread pool to execute.
@@ -122,7 +122,7 @@ class ThreadsModuleTest(unittest.TestCase):
 
         func, data = lambda x:x+1, xrange_(100)
 
-        tmapped = list(tmap(func, data))
+        tmapped = list(tmap(func, data, branchArray))
         mapped = list(map(func, data))
 
         self.assertEqual(tmapped, mapped)
@@ -141,9 +141,9 @@ class ThreadsModuleTest(unittest.TestCase):
         self.assertEqual([(1, 22), (2, 33), (3, 44), (4, 55), (None, 66)], res3)
         self.assertEqual([(1, 22), (2, 33), (3, 44), (4, 55), (5,None)], res4)
 
-    def test_tmap__wait(self):
+    def test_tmap__wait(self, branchArray):
         r = range(1000)
-        wq, results = tmap(lambda x:x, r, num_workers = 5, wait=False)
+        wq, results = tmap(lambda x:x, r, branchArray, num_workers = 5, wait=False)
         wq.wait()
         r2 = map(lambda x:x.result, results)
         self.assertEqual(list(r), list(r2))

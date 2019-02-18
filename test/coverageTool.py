@@ -3,6 +3,7 @@ import cursors_test
 import draw_test
 import sysfont_test
 import sprite_test
+import threads_test
 
 # Coverage tool for measuring how much of a function is covered by tests
 # Note: Is currently only supported by pytohn 3.x not python 2.x
@@ -15,8 +16,10 @@ class coverageTool():
         self.branchArray['compile'] = [False] * 10
         self.branchArray['_draw_line'] = [False] * 18
         self.branchArray['clip_line'] = [False] * 23
+        self.branchArray['draw'] = [False] * 49
         self.branchArray['sysfont'] = [False] * 27
         self.branchArray['add'] = [False] * 24
+        self.branchArray['tmap'] = [False] * 27
         self.branchArray['has'] = [False] * 25
 
     def run(self):
@@ -36,10 +39,15 @@ class coverageTool():
         ct.test_lines_color(self.branchArray['_draw_line'], self.branchArray['clip_line'])
         ct.test_lines_gaps(self.branchArray['_draw_line'], self.branchArray['clip_line'])
 
+        # Test for draw function
+        ct = sprite_test.LayeredDirtyTypeTest__DirtySprite()
+        ct.setUp(self.branchArray['draw'])
+        ct.test_repaint_rect(self.branchArray['draw'])
+        ct.test_repaint_rect_with_clip(self.branchArray['draw'])
+
         # Test for sysfont function
         ct = sysfont_test.SysfontModuleTest()
         ct.test_sysfont(self.branchArray['sysfont'])
-
 
         # Test for add, need new instances of the test bc they update the same attribute
         ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
@@ -126,6 +134,13 @@ class coverageTool():
         ct.setUp(self.branchArray['add'])
         ct.test_switch_layer(self.branchArray['add'])
 
+        # Test for tmap function
+        ct = threads_test.ThreadsModuleTest()
+        ct.test_init()
+        ct.test_tmap(self.branchArray['tmap'])
+        ct.test_tmap__wait(self.branchArray['tmap'])
+        ct.test_quit()
+
         # Test for has
         ct = sprite_test.AbstractGroupTypeTest()
         ct.setUp(self.branchArray['has'])
@@ -147,8 +162,10 @@ class coverageTool():
         self.present("pygame.cursors.compile", self.branchArray['compile'])
         self.present("pygame.draw_py._draw_line", self.branchArray['_draw_line'])
         self.present("pygame.draw_py.clip_line", self.branchArray['clip_line'])
+        self.present("pygame.sprite.draw", self.branchArray['draw'])
         self.present("pygame.sysfont.sysfont", self.branchArray['sysfont'])
         self.present("pygame.sprite.add", self.branchArray['add'])
+        self.present("pygame.threads.__init__.tmap", self.branchArray['tmap'])
         self.present("pygame.sprite.has", self.branchArray['has'])
 
         if self.totCount != 0:
