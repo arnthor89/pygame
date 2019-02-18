@@ -765,9 +765,10 @@ class LayeredUpdates(AbstractGroup):
                     branchArray[20] = True
                 #21
                 branchArray[21] = True
-            # After node 6, we should either enter if or else (not this position?)
-        #22
-        branchArray[22] = True
+            #22
+            branchArray[22] = True
+        #23
+        branchArray[23] = True
 
     def remove_internal(self, sprite):
         """Do not use this method directly.

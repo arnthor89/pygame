@@ -16,7 +16,7 @@ class coverageTool():
         self.branchArray['_draw_line'] = [False] * 18
         self.branchArray['clip_line'] = [False] * 23
         self.branchArray['sysfont'] = [False] * 27
-        self.branchArray['add'] = [False] * 23
+        self.branchArray['add'] = [False] * 24
 
     def run(self):
         # Test for load_xbm
@@ -144,7 +144,7 @@ class coverageTool():
         self.present("pygame.cursors.compile", self.branchArray['compile'])
         self.present("pygame.draw_py._draw_line", self.branchArray['_draw_line'])
         self.present("pygame.draw_py.clip_line", self.branchArray['clip_line'])
-                self.present("pygame.sysfont.sysfont", self.branchArray['sysfont'])
+        self.present("pygame.sysfont.sysfont", self.branchArray['sysfont'])
         self.present("pygame.sprite.add", self.branchArray['add'])
 
         if self.totCount != 0:
