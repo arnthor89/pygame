@@ -430,7 +430,7 @@ def get_fonts():
     return list(Sysfonts)
 
 
-def match_font(name, bold=0, italic=0):
+def match_font(name, branchArray, bold=0, italic=0):
     """pygame.font.match_font(name, bold=0, italic=0) -> name
        find the filename for the named system font
 
@@ -441,25 +441,57 @@ def match_font(name, bold=0, italic=0):
 
        If no match is found, None is returned.
     """
+    #0
+    branchArray[0] = True
     if not Sysfonts:
+        #1
+        branchArray[1] = True
         initsysfonts()
 
+    #2
+    branchArray[2] = True
     fontname = None
     allnames = name
     for name in allnames.split(','):
+        #3
+        branchArray[3] = True
         name = _simplename(name)
         styles = Sysfonts.get(name)
         if not styles:
+            #4
+            branchArray[4] = True
             styles = Sysalias.get(name)
+        #5
+        branchArray[5] = True
         if styles:
+            #6
+            branchArray[6] = True
             while not fontname:
+                #7
+                branchArray[7] = True
                 fontname = styles.get((bold, italic))
                 if italic:
+                    #8
+                    branchArray[8] = True
                     italic = 0
                 elif bold:
+                    #9
+                    branchArray[9] = True
                     bold = 0
                 elif not fontname:
+                    #10
+                    branchArray[10] = True
                     fontname = list(styles.values())[0]
+            #11
+            branchArray[11] = True
+        #12
+        branchArray[12] = True
         if fontname:
+            #13
+            branchArray[13] = True
             break
+        #13
+        branchArray[13] = True
+    #14
+    branchArray[14] = True
     return fontname
