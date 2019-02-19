@@ -44,7 +44,7 @@ class SysfontModuleTest(unittest.TestCase):
     def test_match_font_known(self):
         font = pygame.sysfont.match_font(self.FONT, 1, 1)
         self.assertTrue(font)
-        self.assertTrue(font.endswith(".ttf"))
+        self.assertTrue(font.endswith((".ttf", ".ttc", "otf", "eot", "woff", "svg")))
 
     def test_match_font_unkown(self):
         font = pygame.sysfont.match_font('1234567890')
