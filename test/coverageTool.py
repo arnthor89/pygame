@@ -45,6 +45,12 @@ class coverageTool():
         ct.test_repaint_rect(self.branchArray['draw'])
         ct.test_repaint_rect_with_clip(self.branchArray['draw'])
 
+        # New Tests for clip_line
+        ct = draw_test.ClipLineTest()
+        ct.test_clip_line1(self.branchArray['clip_line'])
+        ct.test_clip_line2(self.branchArray['clip_line'])
+
+
         # Test for sysfont function
         ct = sysfont_test.SysfontModuleTest()
         ct.test_sysfont(self.branchArray['sysfont'])

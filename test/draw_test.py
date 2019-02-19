@@ -872,14 +872,14 @@ class ClipLineTest(unittest.TestCase):
 
     #This test tests when then clipping line's endpoint have the same y-value as 
     #the top of the box. Covers line 174-175
-    def test_clip_line1(self):
+    def test_clip_line1(self, branchArray2):
         pts = [0,3,3,5]
-        self.assertTrue(draw_py.clip_line(pts, 1, 1, 5, 5))
+        self.assertTrue(draw_py.clip_line(pts, 1, 1, 5, 5, branchArray2))
 
-    def test_clip_line2(self):
+    def test_clip_line2(self, branchArray2):
         pts = [5,5,55,15]
         rect = pygame.Rect(10, 10, 30, 40)
-        self.assertFalse(draw_py.clip_line(pts, rect.x, rect.y, rect.x + rect.w - 1, rect.y + rect.h - 1))
+        self.assertFalse(draw_py.clip_line(pts, rect.x, rect.y, rect.x + rect.w - 1, rect.y + rect.h - 1, branchArray2))
 
 
 ################################################################################
