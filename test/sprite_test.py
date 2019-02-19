@@ -1002,11 +1002,11 @@ class LayeredDirtyTypeTest__DirtySprite(LayeredGroupBase, unittest.TestCase):
         group.draw(surface, branchArray)
 
     @unittest.skipIf('Windows' in platform.system(), 'AppVeyor has issue with the path.')
-    def test_draw_with_bgd(self):
+    def test_draw_with_bgd(self, branchArray):
         group = self.LG
         surface = pygame.Surface((100, 100))
         bg = pygame.image.load("test/fixtures/data/background.gif")
-        self.assertEqual([pygame.Rect(0, 0, 100, 100)], group.draw(surface, bg))
+        self.assertEqual([], group.draw(surface, branchArray, bg))
 
 
     def test_repaint_rect_with_clip(self, branchArray):
