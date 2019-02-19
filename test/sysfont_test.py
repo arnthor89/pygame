@@ -3,7 +3,7 @@ import platform
 import pygame.sysfont
 import pygame.font
 
-class SysfontModuleTest():
+class SysfontModuleTest(unittest.TestCase):
     FONT = None
     FONTSLIST = []
     PREFERED_FONT = 'Arial'
@@ -32,7 +32,7 @@ class SysfontModuleTest():
         import pygame.font
         pygame.font.init()
         arial = pygame.font.SysFont('Arial', 40, branchArray)
-        
+
     @unittest.skipIf('Linux' not in platform.platform(), 'Not linux we skip.')
     def test_initsysfonts_unix(self):
         self.assertGreater(len(pygame.sysfont.get_fonts()), 1)
@@ -93,17 +93,17 @@ class SysfontModuleTest():
         self.assertFalse(bold)
         self.assertFalse(italic)
 
-    def test_match_font_known(self):
-        font = pygame.sysfont.match_font(self.FONT, 1, 1)
+    def test_match_font_known(self, branchArray):
+        font = pygame.sysfont.match_font(self.FONT, branchArray, 1, 1)
         self.assertTrue(font)
         self.assertTrue(font.endswith((".ttf", ".ttc", "otf", "eot", "woff", "svg")))
 
-    def test_match_font_unkown(self):
-        font = pygame.sysfont.match_font('1234567890')
+    def test_match_font_unkown(self, branchArray):
+        font = pygame.sysfont.match_font('1234567890', branchArray)
         self.assertIsNone(font)
 
-    def test_match_font_none(self):
-        self.assertRaises(Exception, pygame.sysfont.match_font, None)
+    def test_match_font_none(self, branchArray):
+        self.assertRaises(Exception, pygame.sysfont.match_font, None, branchArray)
 
 ################################################################################
 

@@ -38,6 +38,12 @@ class coverageTool():
         ct.test_line_gaps(self.branchArray['_draw_line'], self.branchArray['clip_line'])
         ct.test_lines_color(self.branchArray['_draw_line'], self.branchArray['clip_line'])
         ct.test_lines_gaps(self.branchArray['_draw_line'], self.branchArray['clip_line'])
+        # Test I added specifically for _draw_line funciton (so only one branchArray is needed)
+        ct.test__draw_line_rather_horizontal_1(self.branchArray['_draw_line'])
+        ct.test__draw_line_rather_horizontal_2(self.branchArray['_draw_line'])
+        ct.test__draw_line_rather_vertical_1(self.branchArray['_draw_line'])
+        ct.test__draw_line_rather_vertical_2(self.branchArray['_draw_line'])
+        ct.test__draw_line_invalid_points(self.branchArray['_draw_line'])
 
         # Test for draw function
         ct = sprite_test.LayeredDirtyTypeTest__DirtySprite()
@@ -45,9 +51,21 @@ class coverageTool():
         ct.test_repaint_rect(self.branchArray['draw'])
         ct.test_repaint_rect_with_clip(self.branchArray['draw'])
 
+        # New Tests for clip_line
+        ct = draw_test.ClipLineTest()
+        ct.test_clip_line1(self.branchArray['clip_line'])
+        ct.test_clip_line2(self.branchArray['clip_line'])
+
+
         # Test for sysfont function
         ct = sysfont_test.SysfontModuleTest()
         ct.test_sysfont(self.branchArray['sysfont'])
+
+        # Test for sysfont function
+        ct = sysfont_test.SysfontModuleTest()
+        ct.test_match_font_known(self.branchArray['match_font'])
+        ct.test_match_font_unkown(self.branchArray['match_font'])
+        ct.test_match_font_none(self.branchArray['match_font'])
 
         # Test for add, need new instances of the test bc they update the same attribute
         ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
