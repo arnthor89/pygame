@@ -334,128 +334,90 @@ def SysFont(name, size, branchArray, bold=False, italic=False, constructor=None)
     branchArray[4] = True
     gotbold = gotitalic = False
     fontname = None
-    if name:
-        #5
-        branchArray[5] = True
-        allnames = name
-        for name in allnames.split(','):
-            #6
-            branchArray[6] = True
-            name = _simplename(name)
-            styles = Sysfonts.get(name)
-            if not styles:
-                #7
-                branchArray[7] = True
-                styles = Sysalias.get(name)
-            #8
-            branchArray[8] = True
-            if styles:
-                #9
-                branchArray[9] = True
-                plainname = styles.get((False, False))
-                fontname = styles.get((bold, italic))
-                if not fontname and not plainname:
-                    #10
-                    branchArray[10] = True
-                    # Neither requested style, nor plain font exists, so
-                    # return a font with the name requested, but an
-                    # arbitrary style.
-                    (style, fontname) = list(styles.items())[0]
-                    # Attempt to style it as requested. This can't
-                    # unbold or unitalicize anything, but it can
-                    # fake bold and/or fake italicize.
-                    if bold and style[0]:
-                        #11
-                        branchArray[11] = True
-                        gotbold = True
-                    #12
-                    branchArray[12] = True
-                    if italic and style[1]:
-                        #13
-                        branchArray[13] = True
-                        gotitalic = True
-                    #14
-                    branchArray[14] = True
-                elif not fontname:
-                    #15
-                    branchArray[15] = True
-                    fontname = plainname
-                elif plainname != fontname:
-                    #16
-                    branchArray[16] = True
-                    gotbold = bold
-                    gotitalic = italic
-                #17
-                branchArray[17] = True
-            #18
-            branchArray[18] = True
-            if fontname:
-                #19
-                branchArray[19] = True
-                break
-            #20
-            branchArray[20] = True
 
-        #21
-        branchArray[21] = True
-    #22
-    branchArray[22] = True
+    fontname, gotbold, gotitalic = get_font_name(name, branchArray, bold, italic)
+
     set_bold = set_italic = False
     if bold and not gotbold:
-        #23
-        branchArray[23] = True
-        set_bold = True
-    #24
-    branchArray[24] = True
-    if italic and not gotitalic:
         #25
         branchArray[25] = True
-        set_italic = True
-
+        set_bold = True
     #26
     branchArray[26] = True
+    if italic and not gotitalic:
+        #27
+        branchArray[27] = True
+        set_italic = True
+
+    #28
+    branchArray[28] = True
     return constructor(fontname, size, set_bold, set_italic)
 
-def get_font_name(name, bold=False, italic=False):
+def get_font_name(name, branchArray, bold=False, italic=False):
     """get_font_name(name, bold=False, italic=False) -> fontname, bold, italic
        Loops through list of comma separated font names. Returns the first 
        font name it finds in the system.
     """
+    #5
+    branchArray[5] = True
     if not name:
+        #6
+        branchArray[6] = True
         return None
 
+    #7
+    branchArray[7] = True
     gotbold = gotitalic = False
     fontname = None
-
     allnames = name
     for name in allnames.split(','):
+        #8
+        branchArray[8] = True
         name = _simplename(name)
 
-        fontname, gotbold, gotitalic = get_styles(name, bold, italic)
+        fontname, gotbold, gotitalic = get_styles(name, branchArray, bold, italic)
         if fontname:
+            #22
+            branchArray[22] = True
             break
 
+        #23
+        branchArray[23] = True
+    #24
+    branchArray[24] = True
     return fontname, gotbold, gotitalic
 
-def get_styles(name, bold=False, italic=False):
+def get_styles(name, branchArray, bold=False, italic=False):
     """get_styles(name, bold=False, italic=False) -> fontname, bold, italic
        Tries to get styles for a specific font name, if the specific
        font you ask for is not available, a reasonable alternative
        may be used.
     """
+    #9
+    branchArray[9] = True
     styles = Sysfonts.get(name)
     if not styles:
+        #10
+        branchArray[10] = True
         styles = Sysalias.get(name)
 
+    #11
+    branchArray[11] = True
     gotbold = gotitalic = False
     fontname = None
 
     if not styles:
+        #12
+        branchArray[12] = True
         return fontname, gotbold, gotitalic
         
+    #13
+    branchArray[13] = True
     plainname = styles.get((False, False))
     fontname = styles.get((bold, italic))
     if not fontname and not plainname:
+        #14
+        branchArray[14] = True
         # Neither requested style, nor plain font exists, so
         # return a font with the name requested, but an
         # arbitrary style.
@@ -464,15 +426,28 @@ def get_styles(name, bold=False, italic=False):
         # unbold or unitalicize anything, but it can
         # fake bold and/or fake italicize.
         if bold and style[0]:
+            #15
+            branchArray[15] = True
             gotbold = True
+        #16
+        branchArray[16] = True
         if italic and style[1]:
+            #17
+            branchArray[17] = True
             gotitalic = True
+        #18
+        branchArray[18] = True
     elif not fontname:
+        #19
+        branchArray[19] = True
         fontname = plainname
     elif plainname != fontname:
+        #20
+        branchArray[20] = True
         gotbold = bold
         gotitalic = italic
-
+    #21
+    branchArray[21] = True
     return fontname, gotbold, gotitalic
 
 def get_fonts():
