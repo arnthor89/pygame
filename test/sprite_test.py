@@ -487,6 +487,10 @@ class AbstractGroupTypeTest( unittest.TestCase ):
         # see if a second AbstractGroup works.
         self.assertEqual(True, self.ag2.has(self.s3))
 
+        # test exception clause for bad sprite class
+        spr = BadSpriteInstance()
+        self.assertFalse(self.ag.has(spr))
+
     def test_add(self):
         ag3 = sprite.AbstractGroup()
         sprites = (self.s1, self.s2, self.s3, self.s4)
@@ -1113,6 +1117,9 @@ class DirtySpriteTypeTest(SpriteBase, unittest.TestCase):
                sprite.RenderUpdates,
                sprite.OrderedUpdates,
                sprite.LayeredDirty, ]
+    
+class BadSpriteInstance():
+    pass
 
 class BadSpriteInstance():
     pass
