@@ -18,18 +18,26 @@ class SysfontModuleTest(unittest.TestCase):
     else:
         FONT = sorted(FONTSLIST)[0]
 
-    # def todo_test_create_aliases(self):
-    #     self.fail()
+    def todo_test_create_aliases(self):
+        self.fail()
 
-    # def todo_test_initsysfonts(self):
-    #     self.fail()
+    def todo_test_initsysfonts(self):
+        self.fail()
 
     @unittest.skipIf('Darwin' not in platform.platform(), 'Not mac we skip.')
     def test_initsysfonts_darwin(self):
-        self.assertTrue(len(pygame.sysfont.get_fonts()) > 10)
+        self.assertGreater(len(pygame.sysfont.get_fonts()), 10)
 
     @unittest.skipIf('Linux' not in platform.platform(), 'Not linux we skip.')
     def test_initsysfonts_unix(self):
+        self.assertGreater(len(pygame.sysfont.get_fonts()), 1)
+
+    @unittest.skipIf('Windows' not in platform.system(), 'Not win we skip.')
+    def test_initsysfonts_win32(self):
+        fonts = pygame.sysfont.initsysfonts_win32()
+        self.assertTrue(fonts)
+        
+    def test_get_fonts(self):
         self.assertGreater(len(pygame.sysfont.get_fonts()), 1)
 
     @unittest.skipIf(not FONT, 'No fonts found, skip')
@@ -79,9 +87,18 @@ class SysfontModuleTest(unittest.TestCase):
         self.assertIsNone(fontname)
         self.assertFalse(bold)
         self.assertFalse(italic)
-    
-    # def todo_test_initsysfonts_win32(self):
-    #     self.fail()
+
+    def test_match_font_known(self):
+        font = pygame.sysfont.match_font(self.FONT, 1, 1)
+        self.assertTrue(font)
+        self.assertTrue(font.endswith((".ttf", ".ttc", "otf", "eot", "woff", "svg")))
+
+    def test_match_font_unkown(self):
+        font = pygame.sysfont.match_font('1234567890')
+        self.assertIsNone(font)
+
+    def test_match_font_none(self):
+        self.assertRaises(Exception, pygame.sysfont.match_font, None)
 
 ################################################################################
 
