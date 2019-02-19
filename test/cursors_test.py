@@ -52,7 +52,7 @@ class CursorsModuleTest(unittest.TestCase):
         )
 
         #Compile the thickarrow_strings cursor
-        compiled_cursor = pygame.cursors.compile(thickarrow_strings, black='X', white='.')
+        compiled_cursor = pygame.cursors.compile(thickarrow_strings, branchArray, black='X', white='.')
 
         #Assert that the returned cursor data is correct
         self.assertEqual(compiled_cursor[0], (192, 0, 0, 224, 0, 0, 240, 0, 0, 216, 0, 0, 204, 0, 0, 198, 0, 0, 195, 0, 0, 193, 128, 0, 192, 192, 0, 192, 96, 0, 192, 48,

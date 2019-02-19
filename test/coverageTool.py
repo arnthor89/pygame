@@ -13,7 +13,7 @@ class coverageTool():
         self.totCount = 0
         self.branchArray = {}
         self.branchArray['load_xbm'] = [False] * 28
-        self.branchArray['compile'] = [False] * 10
+        self.branchArray['compile'] = [False] * 15
         self.branchArray['_draw_line'] = [False] * 18
         self.branchArray['clip_line'] = [False] * 23
         self.branchArray['draw'] = [False] * 49
@@ -38,6 +38,12 @@ class coverageTool():
         ct.test_line_gaps(self.branchArray['_draw_line'], self.branchArray['clip_line'])
         ct.test_lines_color(self.branchArray['_draw_line'], self.branchArray['clip_line'])
         ct.test_lines_gaps(self.branchArray['_draw_line'], self.branchArray['clip_line'])
+        # Test I added specifically for _draw_line funciton (so only one branchArray is needed)
+        ct.test__draw_line_rather_horizontal_1(self.branchArray['_draw_line'])
+        ct.test__draw_line_rather_horizontal_2(self.branchArray['_draw_line'])
+        ct.test__draw_line_rather_vertical_1(self.branchArray['_draw_line'])
+        ct.test__draw_line_rather_vertical_2(self.branchArray['_draw_line'])
+        ct.test__draw_line_invalid_points(self.branchArray['_draw_line'])
 
         # Test for draw function
         ct = sprite_test.LayeredDirtyTypeTest__DirtySprite()
@@ -151,6 +157,10 @@ class coverageTool():
         ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
         ct.setUp(self.branchArray['add'])
         ct.test_switch_layer(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_add_bad_class_sprite(self.branchArray['add'])
 
         # Test for tmap function
         ct = threads_test.ThreadsModuleTest()
