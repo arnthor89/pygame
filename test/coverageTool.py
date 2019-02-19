@@ -49,6 +49,12 @@ class coverageTool():
         ct = sysfont_test.SysfontModuleTest()
         ct.test_sysfont(self.branchArray['sysfont'])
 
+        # Test for sysfont function
+        ct = sysfont_test.SysfontModuleTest()
+        ct.test_match_font_known(self.branchArray['match_font'])
+        ct.test_match_font_unkown(self.branchArray['match_font'])
+        ct.test_match_font_none(self.branchArray['match_font'])
+
         # Test for add, need new instances of the test bc they update the same attribute
         ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
         ct.setUp(self.branchArray['add'])     
