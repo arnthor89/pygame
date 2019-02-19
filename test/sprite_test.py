@@ -487,6 +487,10 @@ class AbstractGroupTypeTest( unittest.TestCase ):
         # see if a second AbstractGroup works.
         self.assertEqual(True, self.ag2.has(self.s3))
 
+        # test exception clause for bad sprite class
+        spr = BadSpriteInstance()
+        self.assertFalse(self.ag.has(spr))
+
     def test_add(self):
         ag3 = sprite.AbstractGroup()
         sprites = (self.s1, self.s2, self.s3, self.s4)
@@ -627,6 +631,20 @@ class LayeredGroupBase:
 
         self.assertEqual(len(self.LG._spritelist), 1)
         self.assertEqual(layer, expected_layer)
+
+    def test_add_bad_class_sprite(self):
+        expected_layer = 100
+        spr = BadSpriteInstance()
+        
+        try:
+            # Should not be able to add bad sprite
+            self.LG.add(spr, layer=expected_layer)
+        except (TypeError, AttributeError):
+            checker = True
+        
+        self.assertTrue(checker)
+        # Sprite should not have been added to the layer
+        self.assertFalse(hasattr(self, '_spritelayers'))
 
     def test_add__overriding_sprite_layer_attr(self):
         expected_layer = 200
@@ -1099,6 +1117,12 @@ class DirtySpriteTypeTest(SpriteBase, unittest.TestCase):
                sprite.RenderUpdates,
                sprite.OrderedUpdates,
                sprite.LayeredDirty, ]
+    
+class BadSpriteInstance():
+    pass
+
+class BadSpriteInstance():
+    pass
 
 ############################## BUG TESTS #######################################
 
@@ -1135,6 +1159,5 @@ class SingleGroupBugsTest(unittest.TestCase):
 
 
 ################################################################################
-
 if __name__ == '__main__':
     unittest.main()
