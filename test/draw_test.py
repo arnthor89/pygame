@@ -205,6 +205,48 @@ class PythonDrawLineTest(LineMixin, unittest.TestCase):
     single_line = [draw_py.draw_aaline, draw_py.draw_line]
     multi_line = [draw_py.draw_aalines, draw_py.draw_lines]
 
+    def test__draw_line_rather_horizontal_1(self):
+        #Case 1a: Rather horizontal line (abs_slope < 1) where x2 > x1
+        surf = pygame.Surface((4,4))
+        color = RED
+        draw_py._draw_line(surf, color, 0, 0, 2, 1)
+        self.assertEqual(surf.get_at((0, 0)), RED)
+        self.assertEqual(surf.get_at((1, 1)), RED)      #see the https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
+        self.assertEqual(surf.get_at((2, 1)), RED)
+    
+    def test__draw_line_rather_horizontal_2(self):
+        #Case 1b: Rather horizontal line (abs_slope < 1) where x2 < x1
+        surf = pygame.Surface((4,4))
+        color = RED
+        draw_py._draw_line(surf, color, 2, 1, 0, 0)
+        self.assertEqual(surf.get_at((0, 0)), RED)
+        self.assertEqual(surf.get_at((1, 1)), RED)      #see the https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
+        self.assertEqual(surf.get_at((2, 1)), RED)
+    
+    def test__draw_line_rather_vertical_1(self):
+        #Case 2a: Rather vertical line (abs_slope >= 1) where y2 > y1
+        surf = pygame.Surface((4,4))
+        color = RED
+        draw_py._draw_line(surf, color, 0, 0, 1, 2)
+        self.assertEqual(surf.get_at((0, 0)), RED)
+        self.assertEqual(surf.get_at((1, 1)), RED)      #see the https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
+        self.assertEqual(surf.get_at((1, 2)), RED)
+    
+    def test__draw_line_rather_vertical_2(self):
+        #Case 2b: Rather vertical line (abs_slope >= 1) where y2 < y1
+        surf = pygame.Surface((4,4))
+        color = RED
+        draw_py._draw_line(surf, color, 1, 2, 0, 0)
+        self.assertEqual(surf.get_at((0, 0)), RED)
+        self.assertEqual(surf.get_at((1, 1)), RED)      #see the https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
+        self.assertEqual(surf.get_at((1, 2)), RED)
+    
+    def test__draw_line_invalid_points(self):
+        # If the line is vertical (x1 = x2), the method raises an error
+        surf = pygame.Surface((4,4))
+        color = RED
+        self.assertRaises(ValueError, draw_py._draw_line, surf, color, 0, 0, 0, 2)
+
 
 class DrawLineTest(LineMixin, unittest.TestCase):
     '''Test draw functions "aaline", "line", "aalines" and "lines".'''
@@ -501,7 +543,6 @@ class PythonAntiAliasingLineTest(AntiAliasedLineMixin, unittest.TestCase):
 
     def draw_aaline(self, color, from_point, to_point):
         draw_py.draw_aaline(self.surface, color, from_point, to_point, 1)
-
 
 class DrawModuleTest(unittest.TestCase):
 
@@ -823,9 +864,15 @@ class ClipLineTest(unittest.TestCase):
 
     #This test tests when then clipping line's endpoint have the same y-value as 
     #the top of the box. Covers line 174-175
-    def test_clip_line2(self):
+    def test_clip_line1(self):
         pts = [0,3,3,5]
-        self.assertTrue(draw_py.clip_line(pts, 1, 1, 5, 5))
+        self.assertTrue(draw_py.clip_line(pts, 1, 1, 5, 5)
+
+    def test_clip_line2(self):
+        pts = [5,5,55,15]
+        rect = pygame.Rect(10, 10, 30, 40)
+        self.assertFalse(draw_py.clip_line(pts, rect.x, rect.y, rect.x + rect.w - 1, rect.y + rect.h - 1))
+
 
 ################################################################################
 
