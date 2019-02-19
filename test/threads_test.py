@@ -141,7 +141,7 @@ class ThreadsModuleTest(unittest.TestCase):
         self.assertEqual([(1, 22), (2, 33), (3, 44), (4, 55), (None, 66)], res3)
         self.assertEqual([(1, 22), (2, 33), (3, 44), (4, 55), (5,None)], res4)
 
-    def test_tmap__no_workers(self):
+    def test_tmap__no_workers(self, branchArray):
         '''Ensure that map is called if the number of workers is set to 0'''
         r = range(1000)
 
@@ -149,13 +149,13 @@ class ThreadsModuleTest(unittest.TestCase):
         expected = list(map(lambda x: x+1,r))
 
         # Ask tmap to do the computation with 0 workers
-        r1 = tmap(lambda x:x+1, r, num_workers = 0)
+        r1 = tmap(lambda x:x+1, r, branchArray, num_workers = 0)
 
         self.assertEqual(list(r1),expected)
 
         # Send tmap an empty worker queue and verify that it uses map in this case too
         wq = WorkerQueue(0)
-        r2 = tmap(lambda x:x+1, r, worker_queue=wq)
+        r2 = tmap(lambda x:x+1, r, branchArray, worker_queue=wq)
 
         self.assertEqual(list(r2),expected)
 

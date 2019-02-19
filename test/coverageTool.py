@@ -169,6 +169,7 @@ class coverageTool():
         ct.test_init()
         ct.test_tmap(self.branchArray['tmap'])
         ct.test_tmap__wait(self.branchArray['tmap'])
+        ct.test_tmap__no_workers(self.branchArray['tmap'])
         ct.test_quit()
 
         # Test for has
