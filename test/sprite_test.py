@@ -3,7 +3,7 @@
 
 
 import unittest
-
+import platform
 import pygame
 from pygame import sprite
 
@@ -489,6 +489,10 @@ class AbstractGroupTypeTest(unittest.TestCase):
         # see if a second AbstractGroup works.
         self.assertEqual(True, self.ag2.has(branchArray, self.s3))
 
+        # test exception clause for bad sprite class
+        spr = BadSpriteInstance()
+        self.assertFalse(self.ag.has(branchArray, spr))
+
     def test_add(self):
         ag3 = sprite.AbstractGroup()
         sprites = (self.s1, self.s2, self.s3, self.s4)
@@ -629,6 +633,20 @@ class LayeredGroupBase:
 
         self.assertEqual(len(self.LG._spritelist), 1)
         self.assertEqual(layer, expected_layer)
+
+    def test_add_bad_class_sprite(self):
+        expected_layer = 100
+        spr = BadSpriteInstance()
+        
+        try:
+            # Should not be able to add bad sprite
+            self.LG.add(spr, layer=expected_layer)
+        except (TypeError, AttributeError):
+            checker = True
+        
+        self.assertTrue(checker)
+        # Sprite should not have been added to the layer
+        self.assertFalse(hasattr(self, '_spritelayers'))
 
     def test_add__overriding_sprite_layer_attr(self, branchArray):
         expected_layer = 200
@@ -983,6 +1001,14 @@ class LayeredDirtyTypeTest__DirtySprite(LayeredGroupBase, unittest.TestCase):
         group.repaint_rect(pygame.Rect(0, 0, 100, 100))
         group.draw(surface, branchArray)
 
+    @unittest.skipIf('Windows' in platform.system(), 'AppVeyor has issue with the path.')
+    def test_draw_with_bgd(self):
+        group = self.LG
+        surface = pygame.Surface((100, 100))
+        bg = pygame.image.load("test/fixtures/data/background.gif")
+        self.assertEqual([pygame.Rect(0, 0, 100, 100)], group.draw(surface, bg))
+
+
     def test_repaint_rect_with_clip(self, branchArray):
         group = self.LG
         surface = pygame.Surface((100, 100))
@@ -1101,6 +1127,12 @@ class DirtySpriteTypeTest(SpriteBase, unittest.TestCase):
                sprite.RenderUpdates,
                sprite.OrderedUpdates,
                sprite.LayeredDirty, ]
+    
+class BadSpriteInstance():
+    pass
+
+class BadSpriteInstance():
+    pass
 
 ############################## BUG TESTS #######################################
 
@@ -1137,6 +1169,5 @@ class SingleGroupBugsTest(unittest.TestCase):
 
 
 ################################################################################
-
 if __name__ == '__main__':
     unittest.main()
