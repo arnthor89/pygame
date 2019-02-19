@@ -38,6 +38,12 @@ class coverageTool():
         ct.test_line_gaps(self.branchArray['_draw_line'], self.branchArray['clip_line'])
         ct.test_lines_color(self.branchArray['_draw_line'], self.branchArray['clip_line'])
         ct.test_lines_gaps(self.branchArray['_draw_line'], self.branchArray['clip_line'])
+        # Test I added specifically for _draw_line funciton (so only one branchArray is needed)
+        ct.test__draw_line_rather_horizontal_1(self.branchArray['_draw_line'])
+        ct.test__draw_line_rather_horizontal_2(self.branchArray['_draw_line'])
+        ct.test__draw_line_rather_vertical_1(self.branchArray['_draw_line'])
+        ct.test__draw_line_rather_vertical_2(self.branchArray['_draw_line'])
+        ct.test__draw_line_invalid_points(self.branchArray['_draw_line'])
 
         # Test for draw function
         ct = sprite_test.LayeredDirtyTypeTest__DirtySprite()
