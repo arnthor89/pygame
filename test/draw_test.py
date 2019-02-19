@@ -866,7 +866,7 @@ class ClipLineTest(unittest.TestCase):
     #the top of the box. Covers line 174-175
     def test_clip_line1(self):
         pts = [0,3,3,5]
-        self.assertTrue(draw_py.clip_line(pts, 1, 1, 5, 5)
+        self.assertTrue(draw_py.clip_line(pts, 1, 1, 5, 5))
 
     def test_clip_line2(self):
         pts = [5,5,55,15]
