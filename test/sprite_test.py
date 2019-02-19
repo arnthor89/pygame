@@ -634,13 +634,13 @@ class LayeredGroupBase:
         self.assertEqual(len(self.LG._spritelist), 1)
         self.assertEqual(layer, expected_layer)
 
-    def test_add_bad_class_sprite(self):
+    def test_add_bad_class_sprite(self, branchArray):
         expected_layer = 100
         spr = BadSpriteInstance()
         
         try:
             # Should not be able to add bad sprite
-            self.LG.add(spr, layer=expected_layer)
+            self.LG.add(branchArray, spr, layer=expected_layer)
         except (TypeError, AttributeError):
             checker = True
         

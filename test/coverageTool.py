@@ -13,11 +13,11 @@ class coverageTool():
         self.totCount = 0
         self.branchArray = {}
         self.branchArray['load_xbm'] = [False] * 28
-        self.branchArray['compile'] = [False] * 10
+        self.branchArray['compile'] = [False] * 15
         self.branchArray['_draw_line'] = [False] * 18
         self.branchArray['clip_line'] = [False] * 23
         self.branchArray['draw'] = [False] * 49
-        self.branchArray['sysfont'] = [False] * 27
+        self.branchArray['sysfont'] = [False] * 29
         self.branchArray['match_font'] = [False] * 15
         self.branchArray['add'] = [False] * 24
         self.branchArray['tmap'] = [False] * 27
@@ -58,10 +58,16 @@ class coverageTool():
         ct.test_clip_line1(self.branchArray['clip_line'])
         ct.test_clip_line2(self.branchArray['clip_line'])
 
-
         # Test for sysfont function
         ct = sysfont_test.SysfontModuleTest()
-        ct.test_sysfont(self.branchArray['sysfont'])
+        ct.test_sysfont_known(self.branchArray['sysfont'])
+        ct.test_sysfont_unkown(self.branchArray['sysfont'])
+        ct.test_get_font_name(self.branchArray['sysfont'])
+        ct.test_get_font_name_with_styles(self.branchArray['sysfont'])
+        ct.test_get_font_name_none(self.branchArray['sysfont'])
+        ct.test_get_styles(self.branchArray['sysfont'])
+        ct.test_get_styles_none(self.branchArray['sysfont'])
+        ct.test_set_styles_unkown(self.branchArray['sysfont'])
 
         # Test for sysfont function
         ct = sysfont_test.SysfontModuleTest()
@@ -153,6 +159,10 @@ class coverageTool():
         ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
         ct.setUp(self.branchArray['add'])
         ct.test_switch_layer(self.branchArray['add'])
+
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_add_bad_class_sprite(self.branchArray['add'])
 
         # Test for tmap function
         ct = threads_test.ThreadsModuleTest()
