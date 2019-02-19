@@ -186,7 +186,7 @@ textmarker_strings = (               #sized 8x16
 
 
 
-def compile(strings, black='X', white='.',xor='o'):
+def compile(strings, branchArray, black='X', white='.',xor='o'):
    """pygame.cursors.compile(strings, black, white,xor) -> data, mask
 compile cursor strings into cursor data
 
@@ -203,15 +203,27 @@ This returns a tuple containing the cursor data and cursor mask
 data. Both these arguments are used when setting a cursor with
 pygame.mouse.set_cursor().
 """
-
+   #0
+   branchArray[0] = True
    #first check for consistent lengths
    size = len(strings[0]), len(strings)
    if size[0] % 8 or size[1] % 8:
+       #1
+       branchArray[1] = True
        raise ValueError("cursor string sizes must be divisible by 8 %s" %
                         size)
+   #2
+   branchArray[2] = True
    for s in strings[1:]:
-       if len(s) != size[0]:
-           raise ValueError("Cursor strings are inconsistent lengths")
+      #3
+      branchArray[3] = True
+      if len(s) != size[0]:
+         #4
+         branchArray[4] = True
+         raise ValueError("Cursor strings are inconsistent lengths")
+
+   #5
+   branchArray[5] = True
 
    #create the data arrays.
    #this could stand a little optimizing
@@ -220,22 +232,40 @@ pygame.mouse.set_cursor().
    maskitem = fillitem = 0
    step = 8
    for s in strings:
-       for c in s:
-           maskitem = maskitem << 1
-           fillitem = fillitem << 1
-           step = step - 1
-           if c == black:
-               maskitem = maskitem | 1
-               fillitem = fillitem | 1
-           elif c == white:
-               maskitem = maskitem | 1
-           elif c == xor:
-               fillitem = fillitem | 1
-           if not step:
-               maskdata.append(maskitem)
-               filldata.append(fillitem)
-               maskitem = fillitem = 0
-               step = 8
+      #6
+      branchArray[6] = True
+      for c in s:
+         #7
+         branchArray[7] = True
+         maskitem = maskitem << 1
+         fillitem = fillitem << 1
+         step = step - 1
+         if c == black:
+            #8
+            branchArray[8] = True
+            maskitem = maskitem | 1
+            fillitem = fillitem | 1
+         elif c == white:
+            #9
+            branchArray[9] = True
+            maskitem = maskitem | 1
+         elif c == xor:
+            #10
+            branchArray[10] = True
+            fillitem = fillitem | 1
+         #11
+         branchArray[11] = True
+         if not step:
+            #12
+            branchArray[12] = True
+            maskdata.append(maskitem)
+            filldata.append(fillitem)
+            maskitem = fillitem = 0
+            step = 8
+         #13
+         branchArray[13] = True
+   #14
+   branchArray[14] = True
    return tuple(filldata), tuple(maskdata)
 
 

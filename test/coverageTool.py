@@ -13,7 +13,7 @@ class coverageTool():
         self.totCount = 0
         self.branchArray = {}
         self.branchArray['load_xbm'] = [False] * 28
-        self.branchArray['compile'] = [False] * 10
+        self.branchArray['compile'] = [False] * 15
         self.branchArray['_draw_line'] = [False] * 18
         self.branchArray['clip_line'] = [False] * 23
         self.branchArray['draw'] = [False] * 49
