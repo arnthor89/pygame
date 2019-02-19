@@ -99,7 +99,6 @@ class SysfontModuleTest(unittest.TestCase):
 
     def test_match_font_none(self):
         self.assertRaises(Exception, pygame.sysfont.match_font, None)
-        self.assertTrue(len(pygame.sysfont.get_fonts()) > 10)
 
 ################################################################################
 
