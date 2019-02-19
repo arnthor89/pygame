@@ -1129,9 +1129,6 @@ class DirtySpriteTypeTest(SpriteBase, unittest.TestCase):
 class BadSpriteInstance():
     pass
 
-class BadSpriteInstance():
-    pass
-
 ############################## BUG TESTS #######################################
 
 class SingleGroupBugsTest(unittest.TestCase):
