@@ -858,9 +858,17 @@ class PythonDrawPolygonTest(DrawPolygonMixin, unittest.TestCase):
     def draw_polygon(self, color, path, width):
         draw_py.draw_polygon(self.surface, color, path, width)
 
+'''These test are added to increase the coverage over the function clip_line
+'''
 class ClipLineTest(unittest.TestCase):
 
-    def test_clip_line(self):
+    #This test tests when then clipping line's endpoint have the same y-value as 
+    #the top of the box. Covers line 174-175
+    def test_clip_line1(self):
+        pts = [0,3,3,5]
+        self.assertTrue(draw_py.clip_line(pts, 1, 1, 5, 5))
+
+    def test_clip_line2(self):
         pts = [5,5,55,15]
         rect = pygame.Rect(10, 10, 30, 40)
         self.assertFalse(draw_py.clip_line(pts, rect.x, rect.y, rect.x + rect.w - 1, rect.y + rect.h - 1))
