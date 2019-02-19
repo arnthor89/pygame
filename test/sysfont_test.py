@@ -3,7 +3,7 @@ import platform
 import pygame.sysfont
 import pygame.font
 
-class SysfontModuleTest():
+class SysfontModuleTest(unittest.TestCase):
     FONT = None
     FONTSLIST = []
     PREFERED_FONT = 'Arial'

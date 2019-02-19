@@ -140,6 +140,10 @@ class coverageTool():
         ct.setUp(self.branchArray['add'])
         ct.test_switch_layer(self.branchArray['add'])
 
+        ct = sprite_test.LayeredUpdatesTypeTest__SpriteTest()
+        ct.setUp(self.branchArray['add'])
+        ct.test_add_bad_class_sprite(self.branchArray['add'])
+
         # Test for tmap function
         ct = threads_test.ThreadsModuleTest()
         ct.test_init()
